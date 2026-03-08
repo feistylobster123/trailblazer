@@ -73,3 +73,112 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-text-muted);
 }
+
+/* ----------------------------------------------------------------
+   View Transitions - MD3 Motion Tokens & Animations
+   ---------------------------------------------------------------- */
+
+:root {
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  --ease-emphasized-decel: cubic-bezier(0.05, 0.7, 0.1, 1.0);
+  --ease-emphasized-accel: cubic-bezier(0.3, 0.0, 0.8, 0.15);
+  --ease-standard-decel: cubic-bezier(0, 0, 0, 1);
+  --ease-standard-accel: cubic-bezier(0.3, 0, 1, 1);
+}
+
+/* Default page transition: subtle fade-through */
+::view-transition-old(root) {
+  animation: 90ms var(--ease-standard-accel) both vt-fade-out;
+}
+::view-transition-new(root) {
+  animation: 210ms var(--ease-standard-decel) 60ms both vt-fade-in;
+}
+
+/* Container transform: race card -> race detail hero */
+::view-transition-group(race-hero) {
+  animation-duration: 350ms;
+  animation-timing-function: var(--ease-emphasized-decel);
+}
+::view-transition-old(race-hero) {
+  animation: 180ms var(--ease-emphasized-accel) both vt-fade-out;
+}
+::view-transition-new(race-hero) {
+  animation: 250ms var(--ease-emphasized-decel) 100ms both vt-fade-in;
+}
+
+/* Container transform: race title text */
+::view-transition-group(race-title) {
+  animation-duration: 350ms;
+  animation-timing-function: var(--ease-emphasized-decel);
+}
+::view-transition-old(race-title) {
+  animation: 150ms var(--ease-emphasized-accel) both vt-fade-out;
+}
+::view-transition-new(race-title) {
+  animation: 250ms var(--ease-emphasized-decel) 100ms both vt-fade-in;
+}
+
+/* Shared header stays stable during navigation */
+::view-transition-group(site-header) {
+  animation-duration: 250ms;
+  animation-timing-function: var(--ease-standard);
+}
+::view-transition-old(site-header),
+::view-transition-new(site-header) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Tab content fade-through */
+.tab-panel-enter {
+  animation: 210ms var(--ease-standard-decel) 60ms both vt-fade-in,
+             210ms var(--ease-standard-decel) 60ms both vt-scale-in;
+}
+.tab-panel-exit {
+  animation: 90ms var(--ease-standard-accel) both vt-fade-out;
+}
+
+/* Keyframes */
+@keyframes vt-fade-out {
+  to { opacity: 0; }
+}
+@keyframes vt-fade-in {
+  from { opacity: 0; }
+}
+@keyframes vt-scale-in {
+  from { transform: scale(0.96); }
+}
+@keyframes vt-slide-in-right {
+  from { transform: translateX(30px); opacity: 0; }
+}
+@keyframes vt-slide-in-up {
+  from { transform: translateY(12px); opacity: 0; }
+}
+
+/* Staggered list entry animation */
+.stagger-in > * {
+  animation: 300ms var(--ease-emphasized-decel) both vt-slide-in-up;
+}
+.stagger-in > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-in > *:nth-child(2) { animation-delay: 40ms; }
+.stagger-in > *:nth-child(3) { animation-delay: 80ms; }
+.stagger-in > *:nth-child(4) { animation-delay: 120ms; }
+.stagger-in > *:nth-child(5) { animation-delay: 160ms; }
+.stagger-in > *:nth-child(6) { animation-delay: 200ms; }
+.stagger-in > *:nth-child(7) { animation-delay: 240ms; }
+.stagger-in > *:nth-child(8) { animation-delay: 280ms; }
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+  .tab-panel-enter,
+  .tab-panel-exit,
+  .stagger-in > * {
+    animation: none !important;
+  }
+}

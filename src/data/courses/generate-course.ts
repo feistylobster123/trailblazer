@@ -418,6 +418,12 @@ const courseTypes: Record<string, 'loop' | 'point-to-point' | 'out-and-back'> = 
   'aravaipa-stronghold': 'out-and-back',
   'whiskey-basin-88k': 'loop',
   'mesquite-canyon-50k': 'loop',
+  'tushars-mountain-100k': 'point-to-point',
+  'silverton-alpine-50': 'loop',
+  'anza-trail-50k': 'point-to-point',
+  'san-tan-scramble-50k': 'loop',
+  'dead-dog-50k': 'loop',
+  'grand-mesa-100': 'loop',
 }
 
 export function getCourseType(raceId: string, tags?: string[]): 'loop' | 'point-to-point' | 'out-and-back' {

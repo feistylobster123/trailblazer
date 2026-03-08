@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { useState, useEffect, useCallback } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 // SVG Icons
 
@@ -80,9 +80,8 @@ interface UserInfo {
 
 const navLinks: NavLink[] = [
   { to: '/', label: 'Races', matchPrefix: '/' },
-  { to: '/races/western-states-100/live', label: 'Live', matchPrefix: '/races' },
-  { to: '/races/western-states-100/results/2025', label: 'Results', matchPrefix: '/races' },
-  { to: '/runners/runner-001', label: 'Profile', matchPrefix: '/runners' },
+  { to: '/races/leadville-100/live', label: 'Live', matchPrefix: '/live' },
+  { to: '/races/javelina-jundred', label: 'Explore', matchPrefix: '/explore' },
 ]
 
 function isActive(link: NavLink, pathname: string): boolean {
@@ -109,10 +108,10 @@ function Navbar({ onMenuToggle, menuOpen }: { onMenuToggle: () => void; menuOpen
   const user = getUser()
 
   return (
-    <header className="bg-primary text-white sticky top-0 z-50 shadow-sm">
+    <header className="bg-primary text-white sticky top-0 z-50 shadow-sm" style={{ viewTransitionName: 'site-header' }}>
       <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 font-extrabold text-lg tracking-tight shrink-0">
+        <Link to="/" viewTransition className="flex items-center gap-2 font-extrabold text-lg tracking-tight shrink-0">
           <IconMountain className="w-5 h-5 text-accent-light" />
           <span>TrailBlazer</span>
         </Link>
@@ -123,6 +122,7 @@ function Navbar({ onMenuToggle, menuOpen }: { onMenuToggle: () => void; menuOpen
             <Link
               key={link.to}
               to={link.to}
+              viewTransition
               className={`text-sm font-medium transition-colors hover:text-accent-light ${
                 isActive(link, location.pathname) ? 'text-accent-light underline underline-offset-4' : 'text-white/80'
               }`}
@@ -145,6 +145,7 @@ function Navbar({ onMenuToggle, menuOpen }: { onMenuToggle: () => void; menuOpen
           ) : (
             <Link
               to="/login"
+              viewTransition
               className="text-sm font-medium bg-accent hover:bg-accent-dark px-4 py-1.5 rounded-full transition-colors"
             >
               Sign In
@@ -174,6 +175,7 @@ function Navbar({ onMenuToggle, menuOpen }: { onMenuToggle: () => void; menuOpen
             <Link
               key={link.to}
               to={link.to}
+              viewTransition
               onClick={onMenuToggle}
               className={`px-3 py-3 rounded-md text-sm font-medium transition-colors ${
                 isActive(link, location.pathname)
@@ -199,6 +201,7 @@ function Navbar({ onMenuToggle, menuOpen }: { onMenuToggle: () => void; menuOpen
             ) : (
               <Link
                 to="/login"
+                viewTransition
                 onClick={onMenuToggle}
                 className="block px-3 py-2 rounded-md text-sm font-medium bg-accent hover:bg-accent-dark text-white transition-colors text-center"
               >
@@ -219,8 +222,8 @@ function MobileNav() {
 
   const tabs = [
     { to: '/', label: 'Races', icon: IconGrid, matchPrefix: '/' },
-    { to: '/races/western-states-100/live', label: 'Live', icon: IconSignal, matchPrefix: '/races' },
-    { to: '/runners/runner-001', label: 'Profile', icon: IconUser, matchPrefix: '/runners' },
+    { to: '/races/leadville-100/live', label: 'Live', icon: IconSignal, matchPrefix: '/live' },
+    { to: '/races/javelina-jundred', label: 'Explore', icon: IconUser, matchPrefix: '/explore' },
     { to: '/login', label: 'Menu', icon: IconMenu, matchPrefix: '/login' },
   ]
 
@@ -234,6 +237,7 @@ function MobileNav() {
             <Link
               key={tab.to}
               to={tab.to}
+              viewTransition
               className={`flex flex-col items-center gap-0.5 text-xs font-medium transition-colors min-w-[3.5rem] py-2 ${
                 active ? 'text-primary' : 'text-text-secondary'
               }`}
@@ -253,8 +257,8 @@ function MobileNav() {
 function Footer() {
   const raceLinks = [
     { label: 'All Races', to: '/' },
-    { label: 'Live Tracking', to: '/races/western-states-100/live' },
-    { label: 'Results', to: '/races/western-states-100/results/2025' },
+    { label: 'Live Tracking', to: '/races/leadville-100/live' },
+    { label: 'Explore', to: '/races/javelina-jundred' },
   ]
 
   const accountLinks = [

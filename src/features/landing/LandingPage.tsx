@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useViewTransitionState } from 'react-router-dom'
 import { useRaceList } from '@/hooks/useRace'
 import { useCountdown } from '@/hooks/useCountdown'
 import {
@@ -73,16 +73,22 @@ function RaceCountdown({ date }: { date: string }) {
 
 function FeaturedRaceCard({ race, index }: { race: RaceSummary; index: number }) {
   const cfg = statusConfig[race.status] ?? statusConfig.upcoming
+  const href = `/races/${race.slug}`
+  const isTransitioning = useViewTransitionState(href)
   return (
-    <Link to={`/races/${race.slug}`} className="block group">
+    <Link to={href} viewTransition className="block group">
       <Card variant="interactive" padding="none" className="overflow-hidden h-full flex flex-col">
         {/* Image / gradient header */}
         <div
           className={`relative h-44 bg-gradient-to-br ${gradientForIndex(index)} flex items-end`}
+          style={{ viewTransitionName: isTransitioning ? 'race-hero' : undefined, contain: isTransitioning ? 'layout' : undefined }}
         >
           <div className="absolute inset-0 bg-black/20" />
           <div className="relative z-10 px-5 pb-4 w-full">
-            <h3 className="text-white text-lg font-bold leading-snug drop-shadow-sm">
+            <h3
+              className="text-white text-lg font-bold leading-snug drop-shadow-sm"
+              style={{ viewTransitionName: isTransitioning ? 'race-title' : undefined }}
+            >
               {race.name}
             </h3>
             <p className="text-white/80 text-sm mt-0.5">{race.location}</p>
@@ -140,12 +146,15 @@ function FeaturedRaceCard({ race, index }: { race: RaceSummary; index: number })
 
 function RaceRow({ race, index }: { race: RaceSummary; index: number }) {
   const cfg = statusConfig[race.status] ?? statusConfig.upcoming
+  const href = `/races/${race.slug}`
+  const isTransitioning = useViewTransitionState(href)
   return (
-    <Link to={`/races/${race.slug}`} className="block group">
+    <Link to={href} viewTransition className="block group">
       <Card variant="interactive" padding="none" className="overflow-hidden flex flex-col sm:flex-row">
         {/* Thumbnail */}
         <div
           className={`sm:w-40 h-28 sm:h-auto shrink-0 bg-gradient-to-br ${gradientForIndex(index)} flex items-center justify-center`}
+          style={{ viewTransitionName: isTransitioning ? 'race-hero' : undefined, contain: isTransitioning ? 'layout' : undefined }}
         >
           <span className="text-white/70 text-xs font-bold uppercase tracking-wider">
             {distanceLabel[race.distance] ?? race.distance}
@@ -154,7 +163,10 @@ function RaceRow({ race, index }: { race: RaceSummary; index: number }) {
         {/* Info */}
         <div className="p-4 flex-1 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
           <div className="flex-1 min-w-0">
-            <h4 className="font-bold text-text truncate group-hover:text-primary transition-colors">
+            <h4
+              className="font-bold text-text truncate group-hover:text-primary transition-colors"
+              style={{ viewTransitionName: isTransitioning ? 'race-title' : undefined }}
+            >
               {race.name}
             </h4>
             <p className="text-sm text-text-secondary truncate">{race.location}</p>
@@ -191,7 +203,7 @@ function RaceRow({ race, index }: { race: RaceSummary; index: number }) {
 function LiveBanner({ race }: { race: RaceSummary }) {
   return (
     <section className="max-w-7xl mx-auto px-4 mb-8">
-      <Link to={`/races/${race.slug}/live`}>
+      <Link to={`/races/${race.slug}/live`} viewTransition>
         <div className="rounded-xl bg-gradient-to-r from-danger/10 to-accent/10 border border-danger/30 p-4 md:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4">
           <div className="flex items-center gap-3">
             <span className="relative flex h-3 w-3">
@@ -445,7 +457,7 @@ export function LandingPage() {
             No races match your current filters. Try clearing them above.
           </p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 stagger-in">
             {heroFilteredFeatured.map((race, i) => (
               <FeaturedRaceCard key={race.id} race={race} index={i} />
             ))}
@@ -555,7 +567,7 @@ export function LandingPage() {
             endurance community.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link to="/register">
+            <Link to="/register" viewTransition>
               <Button size="lg" className="bg-white text-primary hover:bg-white/90 shadow-lg">
                 Sign Up Free
               </Button>

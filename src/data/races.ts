@@ -3,6 +3,7 @@ import type {
   RaceSummary,
   RaceEdition,
 } from '@/services/interfaces/race.service'
+import { aravaipaRaces } from './aravaipa-races'
 
 // ---------------------------------------------------------------------------
 // Race editions
@@ -455,6 +456,7 @@ export const races: Race[] = [
   leadville,
   cascadeCrest,
   tahoe200,
+  ...aravaipaRaces,
 ]
 
 export const raceSummaries: RaceSummary[] = races.map((race) => ({

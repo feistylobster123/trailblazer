@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useRace } from '@/hooks/useRace'
 import { useCountdown } from '@/hooks/useCountdown'
 import { PageHeader } from '@/components/layout/PageHeader'
@@ -470,7 +470,7 @@ function ResultsTab({ race }: { race: Race }) {
               {latestEdition.registeredCount} participants
             </p>
           </div>
-          <Link to={`/races/${race.id}/results/${latestEdition.year}`}>
+          <Link to={`/races/${race.id}/results/${latestEdition.year}`} viewTransition>
             <Button variant="primary" size="md">
               View Full Results
             </Button>
@@ -506,7 +506,7 @@ function ResultsTab({ race }: { race: Race }) {
           <h3 className="text-lg font-bold text-text mb-3">Previous Years</h3>
           <div className="flex flex-wrap gap-2">
             {completedEditions.slice(1).map((ed) => (
-              <Link key={ed.id} to={`/races/${race.id}/results/${ed.year}`}>
+              <Link key={ed.id} to={`/races/${race.id}/results/${ed.year}`} viewTransition>
                 <Button variant="secondary" size="sm">{ed.year}</Button>
               </Link>
             ))}
@@ -536,7 +536,7 @@ function LiveTab({ race }: { race: Race }) {
           <p className="text-text-secondary">
             Follow runners in real-time with GPS tracking, live splits, and interactive course map.
           </p>
-          <Link to={`/races/${race.id}/live`}>
+          <Link to={`/races/${race.id}/live`} viewTransition>
             <Button variant="accent" size="lg">
               Open Live Tracking
             </Button>
@@ -617,6 +617,7 @@ export function RaceDetailPage() {
         backLink="/"
         backLabel="All Races"
         actions={statusBadge(status)}
+        titleTransitionName="race-title"
       />
 
       {/* Date + Registration Countdown */}
@@ -707,7 +708,7 @@ export function RaceDetailPage() {
                 {spotsRemaining} spot{spotsRemaining !== 1 ? 's' : ''} remaining
               </p>
             </div>
-            <Link to={`/races/${raceId}/register`} className="w-full md:w-auto">
+            <Link to={`/races/${raceId}/register`} viewTransition className="w-full md:w-auto">
               <Button variant="accent" size="lg" className="w-full md:w-auto">
                 Register Now
               </Button>

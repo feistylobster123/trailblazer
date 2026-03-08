@@ -9,6 +9,8 @@ import type {
   PaginatedResult,
 } from '../interfaces/race.service'
 import { races, raceSummaries, getRaceById } from '@/data/races'
+import { getCourseData as getRawCourseData } from '@/data/courses'
+import type { CourseData as RawCourseData } from '@/types/race'
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -100,6 +102,41 @@ function paginate<T>(items: T[], params: RaceSearchParams): PaginatedResult<T> {
   }
 }
 
+const M_TO_FT = 3.28084
+const KM_TO_MI = 0.621371
+
+function convertRawCourseData(raw: RawCourseData, editionId: string): CourseData {
+  return {
+    raceId: raw.raceId,
+    editionId,
+    totalDistanceMi: raw.totalDistanceKm * KM_TO_MI,
+    totalElevationGainFt: Math.round(raw.totalElevationGainM * M_TO_FT),
+    totalElevationLossFt: Math.round(raw.totalElevationLossM * M_TO_FT),
+    highPointFt: Math.round(raw.highestPointM * M_TO_FT),
+    lowPointFt: Math.round(raw.lowestPointM * M_TO_FT),
+    segments: [],
+    aidStations: raw.aidStations.map((s) => ({
+      id: s.id,
+      name: s.name,
+      distanceMi: s.distanceMi,
+      cumulativeElevationGain: Math.round(s.elevationFt),
+      coordinates: {
+        lat: s.location.lat,
+        lng: s.location.lng,
+        elevationFt: s.elevationFt,
+      },
+      crewAccessible: s.crewAccess,
+      dropBagsAllowed: s.dropBags,
+      cutoffTime: s.cutoffTime,
+      services: s.supplies,
+    })),
+    elevationProfile: raw.elevationProfile.map((p) => ({
+      distanceMi: p.distanceKm * KM_TO_MI,
+      elevationFt: Math.round(p.elevationM * M_TO_FT),
+    })),
+  }
+}
+
 function toSummary(race: Race): RaceSummary {
   return {
     id: race.id,
@@ -152,7 +189,6 @@ export class MockRaceService implements IRaceService {
 
   async getCourseData(raceId: string, editionId: string): Promise<CourseData> {
     await delay()
-    // Course data files live in src/data/courses/ -- return null-safe stub when not found
     const race = getRaceById(raceId)
     if (!race) {
       throw new Error(`Race not found: ${raceId}`)
@@ -161,8 +197,14 @@ export class MockRaceService implements IRaceService {
     if (!edition) {
       throw new Error(`Edition not found: ${editionId}`)
     }
-    // Return a minimal stub so callers always get a valid CourseData shape
-    // Real GPX-backed data will be loaded once course files are seeded
+
+    // Try to load real course data from src/data/courses/
+    const rawCourse = getRawCourseData(raceId)
+    if (rawCourse) {
+      return convertRawCourseData(rawCourse, editionId)
+    }
+
+    // Fallback stub for races without course data files
     return {
       raceId,
       editionId,
