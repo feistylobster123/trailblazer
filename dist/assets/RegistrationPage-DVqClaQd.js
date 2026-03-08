@@ -1,1 +1,0 @@
-import{j as t}from"./index-LbJHBE--.js";function s(){return t.jsxs("div",{className:"max-w-7xl mx-auto px-4 py-12",children:[t.jsx("h1",{className:"text-4xl font-extrabold text-primary mb-4",children:"Registration"}),t.jsx("p",{className:"text-text-secondary",children:"Registration form coming soon..."})]})}export{s as default};
