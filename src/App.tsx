@@ -1,4 +1,4 @@
-import { createHashRouter, RouterProvider, Outlet } from 'react-router-dom'
+import { createHashRouter, RouterProvider, Outlet, ScrollRestoration } from 'react-router-dom'
 import { AppShell } from './components/layout/AppShell'
 import { ErrorBoundary, RouteErrorBoundary } from './components/ErrorBoundary'
 
@@ -6,6 +6,7 @@ import { ErrorBoundary, RouteErrorBoundary } from './components/ErrorBoundary'
 function Layout() {
   return (
     <AppShell>
+      <ScrollRestoration />
       <Outlet />
     </AppShell>
   )

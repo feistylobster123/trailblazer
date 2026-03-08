@@ -16,8 +16,9 @@ import type { CourseData as RawCourseData } from '@/types/race'
 // Helpers
 // ---------------------------------------------------------------------------
 
+/** Tiny yield so callers stay async but data is available next microtask */
 function delay(): Promise<void> {
-  return new Promise((r) => setTimeout(r, Math.random() * 100 + 50))
+  return Promise.resolve()
 }
 
 function matchesDistance(race: Race, distances: RaceSearchParams['distance']): boolean {

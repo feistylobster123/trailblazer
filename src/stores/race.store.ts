@@ -60,14 +60,16 @@ export const useRaceStore = create<RaceState>((set, get) => ({
   },
 
   fetchRace: async (raceId) => {
-    set({ isLoading: true, error: null, selectedRace: null, courseData: null })
+    // Keep old selectedRace visible during transition to avoid skeleton flash.
+    // Only clear courseData since it's edition-specific.
+    set({ isLoading: true, error: null, courseData: null })
     try {
       const race = getService('race')
       const result = await race.getRace(raceId)
       set({ selectedRace: result, isLoading: false })
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to fetch race'
-      set({ error: message, isLoading: false })
+      set({ error: message, isLoading: false, selectedRace: null })
     }
   },
 

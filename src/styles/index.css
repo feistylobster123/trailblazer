@@ -144,23 +144,42 @@ body {
 
 /* ----------------------------------------------------------------
    Lateral slide transitions (MD3 pattern for bottom nav / tabs)
-   Set data-nav-direction="forward|back" on <html> before navigating
+   Set data-nav-direction="forward|back" on <html> before navigating.
+   Both old and new snapshots slide at the same rate, staying fully
+   opaque so the content looks solid like a native app carousel.
    ---------------------------------------------------------------- */
 
-/* Forward: old content slides left, new slides in from right */
-html[data-nav-direction="forward"]::view-transition-old(root) {
-  animation: 250ms var(--ease-standard) both vt-slide-out-left;
-}
-html[data-nav-direction="forward"]::view-transition-new(root) {
-  animation: 300ms var(--ease-emphasized-decel) both vt-slide-in-from-right;
+/* Disable default crossfade isolation so old+new are both fully visible side-by-side */
+html[data-nav-direction]::view-transition-image-pair(root) {
+  isolation: auto;
 }
 
-/* Back: old content slides right, new slides in from left */
+/* Forward: both slide left together */
+html[data-nav-direction="forward"]::view-transition-old(root),
+html[data-nav-direction="forward"]::view-transition-new(root) {
+  animation-duration: 300ms;
+  animation-timing-function: var(--ease-standard);
+  animation-fill-mode: both;
+}
+html[data-nav-direction="forward"]::view-transition-old(root) {
+  animation-name: vt-slide-out-left;
+}
+html[data-nav-direction="forward"]::view-transition-new(root) {
+  animation-name: vt-slide-in-from-right;
+}
+
+/* Back: both slide right together */
+html[data-nav-direction="back"]::view-transition-old(root),
+html[data-nav-direction="back"]::view-transition-new(root) {
+  animation-duration: 300ms;
+  animation-timing-function: var(--ease-standard);
+  animation-fill-mode: both;
+}
 html[data-nav-direction="back"]::view-transition-old(root) {
-  animation: 250ms var(--ease-standard) both vt-slide-out-right;
+  animation-name: vt-slide-out-right;
 }
 html[data-nav-direction="back"]::view-transition-new(root) {
-  animation: 300ms var(--ease-emphasized-decel) both vt-slide-in-from-left;
+  animation-name: vt-slide-in-from-left;
 }
 
 /* Keyframes */
@@ -179,17 +198,18 @@ html[data-nav-direction="back"]::view-transition-new(root) {
 @keyframes vt-slide-in-up {
   from { transform: translateY(12px); opacity: 0; }
 }
+/* Lateral slides: 100% translate, no opacity change = solid cards */
 @keyframes vt-slide-out-left {
-  to { transform: translateX(-25%); opacity: 0; }
+  to { transform: translateX(-100%); }
 }
 @keyframes vt-slide-out-right {
-  to { transform: translateX(25%); opacity: 0; }
+  to { transform: translateX(100%); }
 }
 @keyframes vt-slide-in-from-right {
-  from { transform: translateX(25%); opacity: 0; }
+  from { transform: translateX(100%); }
 }
 @keyframes vt-slide-in-from-left {
-  from { transform: translateX(-25%); opacity: 0; }
+  from { transform: translateX(-100%); }
 }
 
 /* Staggered list entry animation */

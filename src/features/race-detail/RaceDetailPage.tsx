@@ -586,8 +586,8 @@ export function RaceDetailPage() {
     return base
   }, [status])
 
-  // Loading state
-  if (isLoading && !race) {
+  // Loading state: show skeleton when we have no data yet (first mount or fetch in progress)
+  if (!race && !error) {
     return <RaceDetailSkeleton />
   }
 
