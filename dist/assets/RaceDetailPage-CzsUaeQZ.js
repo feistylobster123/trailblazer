@@ -1,1 +1,0 @@
-import{j as a}from"./index-DXuQIWl4.js";function t(){return a.jsxs("div",{className:"max-w-7xl mx-auto px-4 py-12",children:[a.jsx("h1",{className:"text-4xl font-extrabold text-primary mb-4",children:"Race Detail"}),a.jsx("p",{className:"text-text-secondary",children:"Race details and information coming soon..."})]})}export{t as default};

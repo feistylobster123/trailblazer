@@ -1,0 +1,1 @@
+import{j as e}from"./index-DRKGDUc7.js";function a(){return e.jsxs("div",{className:"max-w-7xl mx-auto px-4 py-12",children:[e.jsx("h1",{className:"text-4xl font-extrabold text-primary mb-4",children:"Live Stream"}),e.jsx("p",{className:"text-text-secondary",children:"Live stream coming soon..."})]})}export{a as default};

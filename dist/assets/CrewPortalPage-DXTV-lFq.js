@@ -1,1 +1,0 @@
-import{j as t}from"./index-DXuQIWl4.js";function r(){return t.jsxs("div",{className:"max-w-7xl mx-auto px-4 py-12",children:[t.jsx("h1",{className:"text-4xl font-extrabold text-primary mb-4",children:"Crew Portal"}),t.jsx("p",{className:"text-text-secondary",children:"Crew portal coming soon..."})]})}export{r as default};
