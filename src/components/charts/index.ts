@@ -1,0 +1,5 @@
+export { PerformanceIndexChart } from './PerformanceIndexChart'
+export { SplitComparisonChart } from './SplitComparisonChart'
+export { PaceChart } from './PaceChart'
+export { ElevationGainChart } from './ElevationGainChart'
+export { RaceHistoryTimeline } from './RaceHistoryTimeline'

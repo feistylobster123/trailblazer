@@ -1,0 +1,1 @@
+import{j as t}from"./index-DXuQIWl4.js";function a(){return t.jsxs("div",{className:"max-w-7xl mx-auto px-4 py-12",children:[t.jsx("h1",{className:"text-4xl font-extrabold text-primary mb-4",children:"Create Account"}),t.jsx("p",{className:"text-text-secondary",children:"Account creation coming soon..."})]})}export{a as default};
