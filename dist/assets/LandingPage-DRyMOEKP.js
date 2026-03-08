@@ -1,0 +1,1 @@
+import{j as e}from"./index-LbJHBE--.js";function s(){return e.jsxs("div",{className:"max-w-7xl mx-auto px-4 py-12",children:[e.jsx("h1",{className:"text-4xl font-extrabold text-primary mb-4",children:"Discover Races"}),e.jsx("p",{className:"text-text-secondary",children:"Race discovery and calendar coming soon..."})]})}export{s as default};

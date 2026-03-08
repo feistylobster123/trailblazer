@@ -1,0 +1,1 @@
+import{j as t}from"./index-LbJHBE--.js";function n(){return t.jsxs("div",{className:"max-w-7xl mx-auto px-4 py-12",children:[t.jsx("h1",{className:"text-4xl font-extrabold text-primary mb-4",children:"Sign In"}),t.jsx("p",{className:"text-text-secondary",children:"Sign in coming soon..."})]})}export{n as default};
