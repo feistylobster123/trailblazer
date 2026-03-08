@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
-import { useState, useEffect, useCallback } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useState, useEffect, useCallback, useRef } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 
 // SVG Icons
 
@@ -217,20 +217,47 @@ function Navbar({ onMenuToggle, menuOpen }: { onMenuToggle: () => void; menuOpen
 
 // MobileNav
 
+const bottomTabs = [
+  { to: '/', label: 'Races', icon: IconGrid, matchPrefix: '/' },
+  { to: '/races/leadville-100/live', label: 'Live', icon: IconSignal, matchPrefix: '/live' },
+  { to: '/races/javelina-jundred', label: 'Explore', icon: IconUser, matchPrefix: '/explore' },
+  { to: '/login', label: 'Menu', icon: IconMenu, matchPrefix: '/login' },
+]
+
+/** Find which bottom tab index best matches the current path */
+function activeTabIndex(pathname: string): number {
+  // Check non-root tabs first (more specific)
+  for (let i = bottomTabs.length - 1; i >= 1; i--) {
+    const t = bottomTabs[i]
+    if (pathname.startsWith(t.to) || (t.matchPrefix !== '/' && pathname.startsWith(t.matchPrefix))) {
+      return i
+    }
+  }
+  return 0 // root
+}
+
 function MobileNav() {
   const location = useLocation()
+  const prevIdx = useRef(activeTabIndex(location.pathname))
 
-  const tabs = [
-    { to: '/', label: 'Races', icon: IconGrid, matchPrefix: '/' },
-    { to: '/races/leadville-100/live', label: 'Live', icon: IconSignal, matchPrefix: '/live' },
-    { to: '/races/javelina-jundred', label: 'Explore', icon: IconUser, matchPrefix: '/explore' },
-    { to: '/login', label: 'Menu', icon: IconMenu, matchPrefix: '/login' },
-  ]
+  // Track current tab index for direction calculation
+  useEffect(() => {
+    prevIdx.current = activeTabIndex(location.pathname)
+  }, [location.pathname])
+
+  const handleTabClick = (targetIdx: number) => {
+    const currentIdx = prevIdx.current
+    if (targetIdx === currentIdx) return // same tab, no direction
+    const dir = targetIdx > currentIdx ? 'forward' : 'back'
+    document.documentElement.dataset.navDirection = dir
+    // Clean up after transition completes
+    setTimeout(() => { delete document.documentElement.dataset.navDirection }, 500)
+  }
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-surface border-t border-border z-50">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-surface border-t border-border z-50" style={{ viewTransitionName: 'bottom-nav' }}>
       <div className="flex justify-around items-center h-16">
-        {tabs.map(tab => {
+        {bottomTabs.map((tab, idx) => {
           const active = tab.to === '/' ? location.pathname === '/' : location.pathname.startsWith(tab.matchPrefix) && tab.matchPrefix !== '/'
           const Icon = tab.icon
           return (
@@ -238,6 +265,7 @@ function MobileNav() {
               key={tab.to}
               to={tab.to}
               viewTransition
+              onClick={() => handleTabClick(idx)}
               className={`flex flex-col items-center gap-0.5 text-xs font-medium transition-colors min-w-[3.5rem] py-2 ${
                 active ? 'text-primary' : 'text-text-secondary'
               }`}

@@ -119,13 +119,16 @@ body {
   animation: 250ms var(--ease-emphasized-decel) 100ms both vt-fade-in;
 }
 
-/* Shared header stays stable during navigation */
-::view-transition-group(site-header) {
+/* Shared header & bottom nav stay stable during navigation */
+::view-transition-group(site-header),
+::view-transition-group(bottom-nav) {
   animation-duration: 250ms;
   animation-timing-function: var(--ease-standard);
 }
 ::view-transition-old(site-header),
-::view-transition-new(site-header) {
+::view-transition-new(site-header),
+::view-transition-old(bottom-nav),
+::view-transition-new(bottom-nav) {
   animation: none;
   mix-blend-mode: normal;
 }
@@ -137,6 +140,27 @@ body {
 }
 .tab-panel-exit {
   animation: 90ms var(--ease-standard-accel) both vt-fade-out;
+}
+
+/* ----------------------------------------------------------------
+   Lateral slide transitions (MD3 pattern for bottom nav / tabs)
+   Set data-nav-direction="forward|back" on <html> before navigating
+   ---------------------------------------------------------------- */
+
+/* Forward: old content slides left, new slides in from right */
+html[data-nav-direction="forward"]::view-transition-old(root) {
+  animation: 250ms var(--ease-standard) both vt-slide-out-left;
+}
+html[data-nav-direction="forward"]::view-transition-new(root) {
+  animation: 300ms var(--ease-emphasized-decel) both vt-slide-in-from-right;
+}
+
+/* Back: old content slides right, new slides in from left */
+html[data-nav-direction="back"]::view-transition-old(root) {
+  animation: 250ms var(--ease-standard) both vt-slide-out-right;
+}
+html[data-nav-direction="back"]::view-transition-new(root) {
+  animation: 300ms var(--ease-emphasized-decel) both vt-slide-in-from-left;
 }
 
 /* Keyframes */
@@ -154,6 +178,18 @@ body {
 }
 @keyframes vt-slide-in-up {
   from { transform: translateY(12px); opacity: 0; }
+}
+@keyframes vt-slide-out-left {
+  to { transform: translateX(-25%); opacity: 0; }
+}
+@keyframes vt-slide-out-right {
+  to { transform: translateX(25%); opacity: 0; }
+}
+@keyframes vt-slide-in-from-right {
+  from { transform: translateX(25%); opacity: 0; }
+}
+@keyframes vt-slide-in-from-left {
+  from { transform: translateX(-25%); opacity: 0; }
 }
 
 /* Staggered list entry animation */

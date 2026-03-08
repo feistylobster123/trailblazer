@@ -115,22 +115,38 @@ function SkeletonBlock({ className = '' }: { className?: string }) {
 
 function RaceDetailSkeleton() {
   return (
-    <div className="max-w-7xl mx-auto px-4">
-      <div className="py-6">
-        <SkeletonBlock className="h-4 w-20 mb-3" />
-        <SkeletonBlock className="h-8 w-2/3 mb-2" />
-        <SkeletonBlock className="h-4 w-1/3" />
+    <div className="pb-24 md:pb-8">
+      {/* Hero skeleton - matches hero banner structure so container transforms work during loading */}
+      <div
+        className="relative bg-gradient-to-br from-primary via-primary-light to-emerald-600 overflow-hidden"
+        style={{ viewTransitionName: 'race-hero', contain: 'layout' }}
+      >
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -top-16 -right-16 w-64 h-64 bg-white/5 rounded-full blur-3xl" />
+        </div>
+        <div className="relative max-w-7xl mx-auto px-4 pt-6 pb-8">
+          <SkeletonBlock className="h-4 w-20 mb-4 !bg-white/20" />
+          <div style={{ viewTransitionName: 'race-title' }}>
+            <SkeletonBlock className="h-9 w-2/3 mb-2 !bg-white/20" />
+          </div>
+          <SkeletonBlock className="h-4 w-1/3 !bg-white/20" />
+          <div className="flex gap-3 mt-4">
+            <SkeletonBlock className="h-6 w-24 !bg-white/20 !rounded-full" />
+            <SkeletonBlock className="h-6 w-16 !bg-white/20 !rounded-full" />
+          </div>
+        </div>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-8">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <SkeletonBlock key={i} className="h-24" />
-        ))}
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 my-8">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <SkeletonBlock key={i} className="h-24" />
+          ))}
+        </div>
+        <SkeletonBlock className="h-10 w-full mb-6" />
+        <SkeletonBlock className="h-[400px] w-full mb-4" />
+        <SkeletonBlock className="h-[200px] w-full" />
       </div>
-
-      <SkeletonBlock className="h-10 w-full mb-6" />
-      <SkeletonBlock className="h-[400px] w-full mb-4" />
-      <SkeletonBlock className="h-[200px] w-full" />
     </div>
   )
 }
