@@ -17,27 +17,25 @@ Updated after each wave/commit. Used for resuming after context interruptions.
 - [x] Layout components (AppShell, PageHeader)
 - [x] 6 utility modules (time, distance, elevation/GAP, performance index, interpolation, formatting)
 
-## Wave 2: Mock Data + Services [PARTIAL]
+## Wave 2: Mock Data + Services [COMPLETE]
 - [x] Race data (src/data/races.ts) - 6 races defined
-- [x] Course data: Western States (src/data/courses/western-states.ts)
-- [x] Course data: UTMB (src/data/courses/utmb.ts)
-- [ ] Course data: Hardrock 100 (src/data/courses/hardrock.ts)
-- [ ] Course data: Leadville 100 (src/data/courses/leadville.ts)
-- [ ] Course data: index.ts barrel export with getCourseData()
+- [x] Course data: Western States, UTMB, Hardrock 100, Leadville 100
+- [x] Course data: index.ts barrel export with getCourseData()
 - [x] Runner PRNG (src/data/runners/prng.ts)
 - [x] Runner name pool (src/data/runners/name-pool.ts)
-- [ ] Runner generator (src/data/runners/generator.ts) - the big one
+- [x] Runner generator (src/data/runners/generator.ts) - 200 runners, fatigue/DNF models
 - [x] Auth mock service (src/services/mock/auth.mock.ts)
 - [x] Race mock service (src/services/mock/race.mock.ts)
-- [ ] Runner mock service (src/services/mock/runner.mock.ts)
-- [ ] Results mock service (src/services/mock/results.mock.ts)
-- [ ] Registration mock service (src/services/mock/registration.mock.ts)
-- [ ] Crew mock service (src/services/mock/crew.mock.ts)
-- [ ] Streaming mock service (src/services/mock/streaming.mock.ts)
-- [ ] Tracking mock service (src/services/mock/tracking.mock.ts)
-- [ ] Wire up init.ts to use real mocks instead of stubs
+- [x] Runner mock service (src/services/mock/runner.mock.ts)
+- [x] Results mock service (src/services/mock/results.mock.ts)
+- [x] Registration mock service (src/services/mock/registration.mock.ts)
+- [x] Crew mock service (src/services/mock/crew.mock.ts)
+- [x] Streaming mock service (src/services/mock/streaming.mock.ts)
+- [x] Tracking mock service (src/services/mock/tracking.mock.ts)
+- [x] Wire up init.ts to use real mock classes
 
 ## Wave 3: Map + Chart Components [COMPLETE]
+- [x] CourseMap.tsx (Leaflet with aid station + runner markers)
 - [x] ElevationProfile.tsx (SVG-based)
 - [x] AidStationMarker.tsx
 - [x] RunnerMarker.tsx
@@ -46,46 +44,31 @@ Updated after each wave/commit. Used for resuming after context interruptions.
 - [x] PaceChart.tsx
 - [x] ElevationGainChart.tsx
 - [x] RaceHistoryTimeline.tsx
-Note: CourseMap.tsx (Leaflet) and MapControls.tsx were NOT created
+- [x] Barrel exports for maps/ and charts/
 
 ## Wave 4: Stores + Hooks [COMPLETE]
-- [x] auth.store.ts
-- [x] race.store.ts
-- [x] tracking.store.ts
-- [x] registration.store.ts
-- [x] streaming.store.ts
-- [ ] ui.store.ts (missing - has unit/theme preferences)
-- [ ] stores/index.ts barrel
-- [x] useAuth.ts
-- [x] useRace.ts
-- [x] useRunner.ts
-- [x] useTracking.ts
-- [x] useResults.ts
-- [ ] useCrew.ts
-- [ ] useRegistration.ts
-- [ ] useCountdown.ts
-- [ ] useMediaQuery.ts
-- [ ] useElevationProfile.ts
-- [ ] hooks/index.ts barrel
+- [x] auth.store.ts, race.store.ts, tracking.store.ts, registration.store.ts, streaming.store.ts, ui.store.ts
+- [x] stores/index.ts barrel
+- [x] useAuth, useRace, useRunner, useTracking, useResults, useCrew, useRegistration
+- [x] useCountdown, useMediaQuery, useElevationProfile
+- [x] hooks/index.ts barrel
 
-## Wave 5: Feature Pages Batch 1 [NOT STARTED]
-- [ ] LandingPage.tsx (hero, featured races, search)
-- [ ] RaceDetailPage.tsx (course map, elevation, info, registration CTA)
-- [ ] LoginPage.tsx + RegisterPage.tsx
-- [ ] RunnerProfilePage.tsx (stats, history, PI chart)
+## Wave 5: Feature Pages Batch 1 [COMPLETE]
+- [x] LandingPage.tsx (hero, featured races, search, filters, live now banner)
+- [x] RaceDetailPage.tsx (course map, elevation, info tabs, registration CTA)
+- [x] LoginPage.tsx + RegisterPage.tsx (auth forms with demo credentials)
+- [x] RunnerProfilePage.tsx (stats, race history timeline, PI chart)
 
-## Wave 6: Feature Pages Batch 2 [NOT STARTED]
-- [ ] LiveTrackingPage.tsx (map with runners, leaderboard, events feed)
-- [ ] ResultsPage.tsx (searchable results table, splits, analysis)
-- [ ] RegistrationPage.tsx (multi-step form with stepper)
-- [ ] CrewPortalPage.tsx (runner ETAs, aid station info, checklists)
+## Wave 6: Feature Pages Batch 2 [COMPLETE]
+- [x] LiveTrackingPage.tsx (map with runners, leaderboard, events feed, playback controls)
+- [x] ResultsPage.tsx (searchable results table, splits, analysis)
+- [x] RegistrationPage.tsx (6-step multi-step form with stepper)
+- [x] CrewPortalPage.tsx (runner ETAs, aid station info, checklists)
 
 ## Wave 7: Tracking Engine + Streaming [NOT STARTED]
-- [ ] GPS replay engine (simulates runner movement along course)
-- [ ] Live event generator (aid station arrivals, DNFs, finishes)
-- [ ] Tracking mock service with real simulation
 - [ ] LiveStreamPage.tsx (embedded video placeholder + chat)
-- [ ] Streaming mock service
+- [ ] GPS replay engine improvements (animate runner movement)
+- [ ] Live event generator enhancements
 
 ## Wave 8: Polish + Deploy [NOT STARTED]
 - [ ] Loading states and error boundaries
