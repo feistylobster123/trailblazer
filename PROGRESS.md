@@ -50,14 +50,19 @@ Updated after each wave/commit. Used for resuming after context interruptions.
 - [x] CrewPortalPage.tsx (runner ETAs, aid station info, checklists)
 - [x] LiveStreamPage.tsx (video placeholder + real-time chat with subscription)
 
-## Wave 7+8: Polish + Deploy [IN PROGRESS]
-- [x] All pages building and deploying to GitHub Pages
-- [ ] Mobile responsiveness final pass
-- [ ] Error boundaries
-- [ ] README with feature overview
-- [ ] Runtime testing and bug fixes
+## Wave 7: Polish [COMPLETE]
+- [x] Error boundaries (app-level + per-route)
+- [x] Mobile responsiveness (all pages use responsive breakpoints, bottom nav, hamburger menu)
+- [x] Build passing cleanly
 
 ## Deployment
 - GitHub Pages: https://feistylobster123.github.io/trailblazer/
 - Auto-deploys on push to main via GitHub Actions
 - Latest deploy status: succeeding
+
+## Future Enhancements (if revisited)
+- [ ] README with feature overview and screenshots
+- [ ] Dark mode theme toggle
+- [ ] PWA support (offline caching, install prompt)
+- [ ] Real API integration (replace mock services)
+- [ ] Performance profiling and optimization
