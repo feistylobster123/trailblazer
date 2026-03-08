@@ -1,0 +1,1 @@
+function f(t){return!isFinite(t)||isNaN(t)?0:Math.max(0,Math.floor(t))}function h(t){const n=f(t),r=Math.floor(n/3600),o=Math.floor(n%3600/60),a=n%60,i=String(r).padStart(2,"0"),s=String(o).padStart(2,"0"),c=String(a).padStart(2,"0");return`${i}:${s}:${c}`}export{h as f};
