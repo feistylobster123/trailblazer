@@ -638,7 +638,10 @@ export function RaceDetailPage() {
       )}
 
       {/* Stats Bar */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-8">
+      <div
+        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-8"
+        style={{ viewTransitionName: 'race-hero' }}
+      >
         <StatCard
           label="Distance"
           value={`${race.distanceMi} mi`}

@@ -4,6 +4,7 @@ import { useRaceList } from '@/hooks/useRace'
 import { useCountdown } from '@/hooks/useCountdown'
 import {
   Badge,
+  BottomSheet,
   Button,
   Card,
   SearchInput,
@@ -252,6 +253,7 @@ export function LandingPage() {
   const [distanceFilter, setDistanceFilter] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
   const [sortBy, setSortBy] = useState('date')
+  const [filtersOpen, setFiltersOpen] = useState(false)
 
   // Apply hero quick-filter chip
   const handleChipClick = (chip: (typeof QUICK_FILTERS)[number]) => {
@@ -472,14 +474,36 @@ export function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 py-12 md:py-16">
           <h2 className="text-2xl md:text-3xl font-extrabold text-text mb-8">All Races</h2>
 
-          {/* Filter bar */}
+          {/* Filter bar - desktop: inline selects, mobile: search + filter button */}
           <div className="flex flex-col sm:flex-row gap-3 mb-8">
             <SearchInput
               value={discoverySearch}
               onChange={setDiscoverySearch}
               placeholder="Search races..."
-              className="sm:w-64"
+              className="flex-1 sm:flex-none sm:w-64"
             />
+
+            {/* Mobile: filter button */}
+            <button
+              onClick={() => setFiltersOpen(true)}
+              className="sm:hidden flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-border bg-surface text-sm font-medium text-text hover:bg-surface-raised transition-colors cursor-pointer"
+            >
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="4" y1="6" x2="20" y2="6" />
+                <line x1="8" y1="12" x2="20" y2="12" />
+                <line x1="12" y1="18" x2="20" y2="18" />
+                <circle cx="6" cy="12" r="1.5" fill="currentColor" />
+                <circle cx="10" cy="18" r="1.5" fill="currentColor" />
+              </svg>
+              Filters
+              {(distanceFilter || statusFilter) && (
+                <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-primary text-white text-xs font-bold">
+                  {(distanceFilter ? 1 : 0) + (statusFilter ? 1 : 0)}
+                </span>
+              )}
+            </button>
+
+            {/* Desktop: inline selects */}
             <Select
               options={[
                 { value: '50k', label: '50K' },
@@ -491,7 +515,7 @@ export function LandingPage() {
               placeholder="Distance"
               value={distanceFilter}
               onChange={(e) => setDistanceFilter(e.target.value)}
-              className="sm:w-40"
+              className="hidden sm:block sm:w-40"
             />
             <Select
               options={[
@@ -504,7 +528,7 @@ export function LandingPage() {
               placeholder="Status"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="sm:w-40"
+              className="hidden sm:block sm:w-40"
             />
             <Select
               options={[
@@ -514,7 +538,7 @@ export function LandingPage() {
               ]}
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="sm:w-36"
+              className="hidden sm:block sm:w-36"
             />
             {(distanceFilter || statusFilter || discoverySearch) && (
               <button
@@ -523,12 +547,88 @@ export function LandingPage() {
                   setStatusFilter('')
                   setDiscoverySearch('')
                 }}
-                className="text-sm text-text-secondary hover:text-text transition-colors cursor-pointer self-center"
+                className="hidden sm:inline-flex text-sm text-text-secondary hover:text-text transition-colors cursor-pointer self-center"
               >
                 Clear filters
               </button>
             )}
           </div>
+
+          {/* Mobile filter bottom sheet */}
+          <BottomSheet
+            open={filtersOpen}
+            onClose={() => setFiltersOpen(false)}
+            title="Filters"
+          >
+            <div className="space-y-4 pb-2">
+              <div>
+                <label className="block text-sm font-medium text-text-secondary mb-1.5">Distance</label>
+                <Select
+                  options={[
+                    { value: '50k', label: '50K' },
+                    { value: '50mi', label: '50 Miles' },
+                    { value: '100k', label: '100K' },
+                    { value: '100mi', label: '100 Miles' },
+                    { value: 'other', label: 'Other' },
+                  ]}
+                  placeholder="All distances"
+                  value={distanceFilter}
+                  onChange={(e) => setDistanceFilter(e.target.value)}
+                  className="w-full"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-text-secondary mb-1.5">Status</label>
+                <Select
+                  options={[
+                    { value: 'registration_open', label: 'Reg. Open' },
+                    { value: 'upcoming', label: 'Upcoming' },
+                    { value: 'registration_closed', label: 'Reg. Closed' },
+                    { value: 'in_progress', label: 'In Progress' },
+                    { value: 'completed', label: 'Completed' },
+                  ]}
+                  placeholder="All statuses"
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                  className="w-full"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-text-secondary mb-1.5">Sort by</label>
+                <Select
+                  options={[
+                    { value: 'date', label: 'Date' },
+                    { value: 'distance', label: 'Distance' },
+                    { value: 'name', label: 'Name' },
+                  ]}
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="w-full"
+                />
+              </div>
+              <div className="flex gap-3 pt-2">
+                {(distanceFilter || statusFilter) && (
+                  <Button
+                    variant="secondary"
+                    className="flex-1"
+                    onClick={() => {
+                      setDistanceFilter('')
+                      setStatusFilter('')
+                    }}
+                  >
+                    Clear
+                  </Button>
+                )}
+                <Button
+                  variant="primary"
+                  className="flex-1"
+                  onClick={() => setFiltersOpen(false)}
+                >
+                  Show results
+                </Button>
+              </div>
+            </div>
+          </BottomSheet>
 
           {/* Race list */}
           {isLoading ? (

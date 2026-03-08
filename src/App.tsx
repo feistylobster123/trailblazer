@@ -1,5 +1,5 @@
 import { Suspense, lazy } from 'react'
-import { HashRouter, Routes, Route } from 'react-router-dom'
+import { createHashRouter, RouterProvider, Outlet } from 'react-router-dom'
 import { AppShell } from './components/layout/AppShell'
 import { ErrorBoundary, RouteErrorBoundary } from './components/ErrorBoundary'
 
@@ -33,27 +33,39 @@ function WrappedRoute({ element }: { element: React.ReactNode }) {
   )
 }
 
+/** Layout route: AppShell wraps all pages, Outlet renders the matched child */
+function Layout() {
+  return (
+    <AppShell>
+      <Suspense fallback={<LoadingFallback />}>
+        <Outlet />
+      </Suspense>
+    </AppShell>
+  )
+}
+
+const router = createHashRouter([
+  {
+    element: <Layout />,
+    children: [
+      { path: '/', element: <WrappedRoute element={<LandingPage />} /> },
+      { path: '/races/:raceId', element: <WrappedRoute element={<RaceDetailPage />} /> },
+      { path: '/races/:raceId/register', element: <WrappedRoute element={<RegistrationPage />} /> },
+      { path: '/races/:raceId/results/:year', element: <WrappedRoute element={<ResultsPage />} /> },
+      { path: '/races/:raceId/live', element: <WrappedRoute element={<LiveTrackingPage />} /> },
+      { path: '/races/:raceId/stream', element: <WrappedRoute element={<LiveStreamPage />} /> },
+      { path: '/runners/:runnerId', element: <WrappedRoute element={<RunnerProfilePage />} /> },
+      { path: '/crew/:raceId', element: <WrappedRoute element={<CrewPortalPage />} /> },
+      { path: '/login', element: <WrappedRoute element={<LoginPage />} /> },
+      { path: '/register', element: <WrappedRoute element={<RegisterPage />} /> },
+    ],
+  },
+])
+
 export function App() {
   return (
     <ErrorBoundary>
-      <HashRouter>
-        <AppShell>
-          <Suspense fallback={<LoadingFallback />}>
-            <Routes>
-              <Route path="/" element={<WrappedRoute element={<LandingPage />} />} />
-              <Route path="/races/:raceId" element={<WrappedRoute element={<RaceDetailPage />} />} />
-              <Route path="/races/:raceId/register" element={<WrappedRoute element={<RegistrationPage />} />} />
-              <Route path="/races/:raceId/results/:year" element={<WrappedRoute element={<ResultsPage />} />} />
-              <Route path="/races/:raceId/live" element={<WrappedRoute element={<LiveTrackingPage />} />} />
-              <Route path="/races/:raceId/stream" element={<WrappedRoute element={<LiveStreamPage />} />} />
-              <Route path="/runners/:runnerId" element={<WrappedRoute element={<RunnerProfilePage />} />} />
-              <Route path="/crew/:raceId" element={<WrappedRoute element={<CrewPortalPage />} />} />
-              <Route path="/login" element={<WrappedRoute element={<LoginPage />} />} />
-              <Route path="/register" element={<WrappedRoute element={<RegisterPage />} />} />
-            </Routes>
-          </Suspense>
-        </AppShell>
-      </HashRouter>
+      <RouterProvider router={router} />
     </ErrorBoundary>
   )
 }

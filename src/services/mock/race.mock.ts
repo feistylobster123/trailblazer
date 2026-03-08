@@ -193,21 +193,25 @@ export class MockRaceService implements IRaceService {
     if (!race) {
       throw new Error(`Race not found: ${raceId}`)
     }
-    const edition = race.editions.find((e) => e.id === editionId)
+    // Default to current or first edition when editionId is empty (race condition in store)
+    const edition = editionId
+      ? race.editions.find((e) => e.id === editionId)
+      : (race.currentEdition ?? race.editions[0])
     if (!edition) {
-      throw new Error(`Edition not found: ${editionId}`)
+      throw new Error(`Edition not found: ${editionId} for race ${raceId}`)
     }
+    const resolvedEditionId = edition.id
 
     // Try to load real course data from src/data/courses/
     const rawCourse = getRawCourseData(raceId)
     if (rawCourse) {
-      return convertRawCourseData(rawCourse, editionId)
+      return convertRawCourseData(rawCourse, resolvedEditionId)
     }
 
     // Fallback stub for races without course data files
     return {
       raceId,
-      editionId,
+      editionId: resolvedEditionId,
       totalDistanceMi: race.distanceMi,
       totalElevationGainFt: race.elevationGainFt,
       totalElevationLossFt: Math.round(race.elevationGainFt * 0.95),
