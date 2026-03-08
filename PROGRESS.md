@@ -21,37 +21,21 @@ Updated after each wave/commit. Used for resuming after context interruptions.
 - [x] Race data (src/data/races.ts) - 6 races defined
 - [x] Course data: Western States, UTMB, Hardrock 100, Leadville 100
 - [x] Course data: index.ts barrel export with getCourseData()
-- [x] Runner PRNG (src/data/runners/prng.ts)
-- [x] Runner name pool (src/data/runners/name-pool.ts)
-- [x] Runner generator (src/data/runners/generator.ts) - 200 runners, fatigue/DNF models
-- [x] Auth mock service (src/services/mock/auth.mock.ts)
-- [x] Race mock service (src/services/mock/race.mock.ts)
-- [x] Runner mock service (src/services/mock/runner.mock.ts)
-- [x] Results mock service (src/services/mock/results.mock.ts)
-- [x] Registration mock service (src/services/mock/registration.mock.ts)
-- [x] Crew mock service (src/services/mock/crew.mock.ts)
-- [x] Streaming mock service (src/services/mock/streaming.mock.ts)
-- [x] Tracking mock service (src/services/mock/tracking.mock.ts)
-- [x] Wire up init.ts to use real mock classes
+- [x] Runner PRNG + name pool + generator (200 runners, fatigue/DNF models)
+- [x] All 8 mock service implementations (auth, race, runner, results, registration, crew, streaming, tracking)
+- [x] Service init wired to real mock classes
 
 ## Wave 3: Map + Chart Components [COMPLETE]
 - [x] CourseMap.tsx (Leaflet with aid station + runner markers)
 - [x] ElevationProfile.tsx (SVG-based)
-- [x] AidStationMarker.tsx
-- [x] RunnerMarker.tsx
-- [x] PerformanceIndexChart.tsx (Recharts)
-- [x] SplitComparisonChart.tsx
-- [x] PaceChart.tsx
-- [x] ElevationGainChart.tsx
-- [x] RaceHistoryTimeline.tsx
+- [x] AidStationMarker.tsx, RunnerMarker.tsx
+- [x] 5 Recharts components (PI chart, splits, pace, elevation gain, timeline)
 - [x] Barrel exports for maps/ and charts/
 
 ## Wave 4: Stores + Hooks [COMPLETE]
-- [x] auth.store.ts, race.store.ts, tracking.store.ts, registration.store.ts, streaming.store.ts, ui.store.ts
-- [x] stores/index.ts barrel
-- [x] useAuth, useRace, useRunner, useTracking, useResults, useCrew, useRegistration
-- [x] useCountdown, useMediaQuery, useElevationProfile
-- [x] hooks/index.ts barrel
+- [x] 6 Zustand stores (auth, race, tracking, registration, streaming, ui)
+- [x] 10 custom hooks (auth, race, runner, tracking, results, crew, registration, countdown, media query, elevation profile)
+- [x] Barrel exports
 
 ## Wave 5: Feature Pages Batch 1 [COMPLETE]
 - [x] LandingPage.tsx (hero, featured races, search, filters, live now banner)
@@ -64,15 +48,16 @@ Updated after each wave/commit. Used for resuming after context interruptions.
 - [x] ResultsPage.tsx (searchable results table, splits, analysis)
 - [x] RegistrationPage.tsx (6-step multi-step form with stepper)
 - [x] CrewPortalPage.tsx (runner ETAs, aid station info, checklists)
+- [x] LiveStreamPage.tsx (video placeholder + real-time chat with subscription)
 
-## Wave 7: Tracking Engine + Streaming [NOT STARTED]
-- [ ] LiveStreamPage.tsx (embedded video placeholder + chat)
-- [ ] GPS replay engine improvements (animate runner movement)
-- [ ] Live event generator enhancements
+## Wave 7+8: Polish + Deploy [IN PROGRESS]
+- [x] All pages building and deploying to GitHub Pages
+- [ ] Mobile responsiveness final pass
+- [ ] Error boundaries
+- [ ] README with feature overview
+- [ ] Runtime testing and bug fixes
 
-## Wave 8: Polish + Deploy [NOT STARTED]
-- [ ] Loading states and error boundaries
-- [ ] Mobile responsiveness pass
-- [ ] Cross-page navigation polish
-- [ ] Final build + deploy to GitHub Pages
-- [ ] README with screenshots
+## Deployment
+- GitHub Pages: https://feistylobster123.github.io/trailblazer/
+- Auto-deploys on push to main via GitHub Actions
+- Latest deploy status: succeeding
