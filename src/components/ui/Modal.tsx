@@ -41,13 +41,13 @@ export function Modal({ isOpen, onClose, title, children, size = 'md', className
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm animate-in fade-in"
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-200"
         onClick={onClose}
       />
       {/* Panel */}
       <div
         className={`relative bg-surface rounded-xl shadow-xl w-full ${sizeStyles[size]}
-          max-h-[90vh] flex flex-col animate-in zoom-in-95 ${className}`}
+          max-h-[90vh] flex flex-col transition-transform duration-200 ${className}`}
       >
         {title && (
           <div className="flex items-center justify-between px-6 py-4 border-b border-border shrink-0">

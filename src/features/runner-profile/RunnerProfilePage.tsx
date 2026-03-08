@@ -78,7 +78,7 @@ const TABS = [
   { id: 'stats', label: 'Stats', icon: '📊' },
 ]
 
-export function RunnerProfilePage() {
+export default function RunnerProfilePage() {
   const { runnerId } = useParams<{ runnerId: string }>()
   const { runner, stats, raceHistory, personalRecords, piHistory, isLoading, error } = useRunner(runnerId)
   const [activeTab, setActiveTab] = useState('history')

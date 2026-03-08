@@ -82,7 +82,7 @@ const STREAM_INFO: Record<string, Omit<StreamInfo, 'raceId' | 'editionId'>> = {
     title: 'UTMB Mont-Blanc 2025 - Live',
     description:
       'Live coverage of the Ultra-Trail du Mont-Blanc, circumnavigating the highest peak in the Alps through France, Italy, and Switzerland.',
-    status: 'upcoming' as StreamStatus,
+    status: 'scheduled' as StreamStatus,
     scheduledStartTime: '2025-08-29T18:00:00+02:00',
     viewerCount: 0,
     sources: [
@@ -278,7 +278,7 @@ export class MockStreamingService implements IStreamingService {
       result.actualStartTime = entry.actualStartTime
     }
 
-    if (entry.status === 'scheduled' || entry.status === 'upcoming') {
+    if (entry.status === 'scheduled') {
       result.scheduledStartTime = entry.scheduledStartTime
     }
 

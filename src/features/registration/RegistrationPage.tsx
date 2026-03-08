@@ -95,8 +95,6 @@ interface MedicalData {
   medications: string
   conditions: string
   bloodType: string
-  insuranceProvider: string
-  insurancePolicyNumber: string
 }
 
 interface WaiversData {
@@ -352,20 +350,6 @@ function StepMedicalInfo({
         value={data.bloodType}
         onChange={(e) => set('bloodType', e.target.value)}
       />
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <Input
-          label="Health Insurance Provider"
-          value={data.insuranceProvider}
-          onChange={(e) => set('insuranceProvider', e.target.value)}
-          placeholder="Blue Cross Blue Shield"
-        />
-        <Input
-          label="Policy Number"
-          value={data.insurancePolicyNumber}
-          onChange={(e) => set('insurancePolicyNumber', e.target.value)}
-          placeholder="ABC123456789"
-        />
-      </div>
     </div>
   )
 }
@@ -557,7 +541,6 @@ function StepReviewAndPay({
         <ReviewRow label="Allergies" value={medical.allergies || 'None'} />
         <ReviewRow label="Medications" value={medical.medications || 'None'} />
         <ReviewRow label="Conditions" value={medical.conditions || 'None'} />
-        <ReviewRow label="Insurance" value={medical.insuranceProvider} />
       </Card>
 
       <Card>
@@ -691,7 +674,6 @@ export function RegistrationPage() {
   })
   const [medical, setMedical] = useState<MedicalData>({
     allergies: '', medications: '', conditions: '', bloodType: '',
-    insuranceProvider: '', insurancePolicyNumber: '',
   })
   const [waivers, setWaivers] = useState<WaiversData>({ accepted: {} })
   const [dropBags, setDropBags] = useState<DropBagsData>({ selectedStations: {} })
@@ -761,8 +743,6 @@ export function RegistrationPage() {
           allergies: medical.allergies,
           medications: medical.medications,
           medicalConditions: medical.conditions,
-          insuranceProvider: medical.insuranceProvider,
-          insurancePolicyNumber: medical.insurancePolicyNumber,
         },
       })
       nextStep()
@@ -839,8 +819,8 @@ export function RegistrationPage() {
             emergencyContact={emergencyContact}
             medical={medical}
             dropBags={dropBags}
-            entryFee={race?.entryFee ?? 395}
-            currency={race?.currency ?? 'USD'}
+            entryFee={race?.currentEdition?.entryFee ?? 395}
+            currency={'USD'}
             onSubmit={handleSubmit}
             isSubmitting={isSubmitting}
           />

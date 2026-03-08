@@ -12,8 +12,8 @@ export function useRace(raceId?: string) {
   }, [raceId])
 
   return {
-    race: store.currentRace,
-    courseData: store.currentCourseData,
+    race: store.selectedRace,
+    courseData: store.courseData,
     isLoading: store.isLoading,
     error: store.error,
   }
@@ -24,7 +24,8 @@ export function useRaceList() {
   const [filters, setFilters] = useState<RaceSearchParams>({})
 
   useEffect(() => {
-    store.fetchRaces(filters)
+    if (filters.query) store.setFilters({ search: filters.query })
+    store.fetchRaces()
   }, [JSON.stringify(filters)])
 
   useEffect(() => {

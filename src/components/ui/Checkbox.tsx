@@ -7,8 +7,9 @@ interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'typ
 }
 
 export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
-  ({ label, description, error, className = '', id, ...props }, ref) => {
+  ({ label, description, error, className = '', id, checked, onChange, ...props }, ref) => {
     const checkboxId = id || (label ? `cb-${label.toLowerCase().replace(/\s+/g, '-')}` : undefined)
+    const isChecked = !!checked
 
     return (
       <div className={`flex flex-col gap-1 ${className}`}>
@@ -18,18 +19,20 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
               ref={ref}
               type="checkbox"
               id={checkboxId}
-              className="peer sr-only"
+              className="sr-only"
+              checked={checked}
+              onChange={onChange}
               {...props}
             />
             <div
-              className="w-5 h-5 rounded border-2 border-border bg-surface
-                peer-checked:bg-primary peer-checked:border-primary
-                peer-focus-visible:ring-2 peer-focus-visible:ring-primary/20
-                peer-disabled:opacity-50 peer-disabled:cursor-not-allowed
-                transition-colors flex items-center justify-center"
+              className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors
+                ${isChecked
+                  ? 'bg-primary border-primary'
+                  : 'border-border bg-surface group-hover:border-primary/50'
+                }`}
             >
               <svg
-                className="w-3 h-3 text-white opacity-0 peer-checked:opacity-100 transition-opacity"
+                className={`w-3 h-3 text-white transition-opacity ${isChecked ? 'opacity-100' : 'opacity-0'}`}
                 viewBox="0 0 12 12"
                 fill="none"
                 stroke="currentColor"
@@ -40,7 +43,6 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
                 <path d="M2 6l3 3 5-5" />
               </svg>
             </div>
-            {/* Visible checkmark overlay since peer selector on sibling doesn't work for nested */}
           </div>
           <div className="flex flex-col">
             {label && (

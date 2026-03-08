@@ -7,10 +7,47 @@ import { ElevationProfile } from '@/components/maps/ElevationProfile'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { Card, CardHeader, CardTitle } from '@/components/ui'
 import { SearchInput, Badge, Button, Skeleton } from '@/components/ui'
-import { formatDuration, formatDurationShort, formatPaceMi } from '@/utils/time'
+import { formatDuration } from '@/utils/time'
 import type { RunnerPosition, TrackingEvent } from '@/services/interfaces/tracking.service'
+import type { AidStation as TypesAidStation, ElevationPoint } from '@/types/race'
+import type { AidStation as ServiceAidStation } from '@/services/interfaces/race.service'
 
 const KM_TO_MI = 0.621371
+const MI_TO_KM = 1.60934
+const FT_TO_M = 0.3048
+
+function toTypesAidStation(s: ServiceAidStation): TypesAidStation {
+  return {
+    id: s.id,
+    name: s.name,
+    distanceKm: s.distanceMi * MI_TO_KM,
+    distanceMi: s.distanceMi,
+    elevationM: Math.round((s.coordinates.elevationFt ?? 0) * FT_TO_M),
+    elevationFt: s.coordinates.elevationFt ?? 0,
+    location: { lat: s.coordinates.lat, lng: s.coordinates.lng },
+    cutoffTime: s.cutoffTime,
+    crewAccess: s.crewAccessible,
+    pacerAccess: false,
+    dropBags: s.dropBagsAllowed,
+    supplies: s.services,
+    description: '',
+  }
+}
+
+function toElevationPoints(profile: Array<{ distanceMi: number; elevationFt: number }>): ElevationPoint[] {
+  return profile.map((p, i, arr) => {
+    const distanceKm = p.distanceMi * MI_TO_KM
+    const elevationM = p.elevationFt * FT_TO_M
+    let grade = 0
+    if (i > 0) {
+      const prevDist = arr[i - 1].distanceMi * MI_TO_KM
+      const prevElev = arr[i - 1].elevationFt * FT_TO_M
+      const dDist = (distanceKm - prevDist) * 1000
+      if (dDist > 0) grade = ((elevationM - prevElev) / dDist) * 100
+    }
+    return { distanceKm, elevationM, grade }
+  })
+}
 
 const PLAYBACK_SPEEDS = [1, 2, 5, 10]
 
@@ -199,47 +236,49 @@ function PlaybackControls({
   const progress = totalDurationSeconds > 0 ? (elapsedSeconds / totalDurationSeconds) * 100 : 0
 
   return (
-    <div className="flex items-center gap-3 bg-surface border border-border rounded-xl px-4 py-3">
-      {/* Play/Pause */}
-      <button
-        onClick={onPlayPause}
-        className="w-9 h-9 flex items-center justify-center rounded-full bg-primary text-white hover:bg-primary-light transition-colors shrink-0 cursor-pointer"
-        aria-label={isPlaying ? 'Pause' : 'Play'}
-      >
-        {isPlaying ? (
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
-            <rect x="2" y="1" width="3.5" height="12" rx="1" />
-            <rect x="8.5" y="1" width="3.5" height="12" rx="1" />
-          </svg>
-        ) : (
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
-            <path d="M3 1.5v11l9.5-5.5z" />
-          </svg>
-        )}
-      </button>
+    <div className="bg-surface border border-border rounded-xl px-3 sm:px-4 py-3 space-y-2 sm:space-y-0">
+      <div className="flex items-center gap-3">
+        {/* Play/Pause */}
+        <button
+          onClick={onPlayPause}
+          className="w-11 h-11 flex items-center justify-center rounded-full bg-primary text-white hover:bg-primary-light transition-colors shrink-0 cursor-pointer"
+          aria-label={isPlaying ? 'Pause' : 'Play'}
+        >
+          {isPlaying ? (
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+              <rect x="2" y="1" width="3.5" height="12" rx="1" />
+              <rect x="8.5" y="1" width="3.5" height="12" rx="1" />
+            </svg>
+          ) : (
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+              <path d="M3 1.5v11l9.5-5.5z" />
+            </svg>
+          )}
+        </button>
 
-      {/* Elapsed / Total */}
-      <span className="text-xs font-mono text-text-secondary shrink-0 w-24 text-center">
-        {formatDuration(elapsedSeconds)} / {formatDuration(totalDurationSeconds)}
-      </span>
+        {/* Elapsed / Total */}
+        <span className="text-xs font-mono text-text-secondary shrink-0 text-center">
+          {formatDuration(elapsedSeconds)} / {formatDuration(totalDurationSeconds)}
+        </span>
 
-      {/* Seek bar */}
-      <input
-        type="range"
-        min={0}
-        max={totalDurationSeconds}
-        value={elapsedSeconds}
-        onChange={(e) => onSeek(Number(e.target.value))}
-        className="flex-1 h-1.5 accent-primary cursor-pointer"
-      />
+        {/* Seek bar */}
+        <input
+          type="range"
+          min={0}
+          max={totalDurationSeconds}
+          value={elapsedSeconds}
+          onChange={(e) => onSeek(Number(e.target.value))}
+          className="flex-1 h-1.5 accent-primary cursor-pointer min-w-0"
+        />
+      </div>
 
-      {/* Speed buttons */}
-      <div className="flex items-center gap-1 shrink-0">
+      {/* Speed buttons - separate row on mobile */}
+      <div className="flex items-center gap-1 justify-center sm:justify-end">
         {PLAYBACK_SPEEDS.map((speed) => (
           <button
             key={speed}
             onClick={() => onSpeedChange(speed)}
-            className={`px-2 py-1 text-xs font-semibold rounded transition-colors cursor-pointer
+            className={`px-3 py-1.5 text-xs font-semibold rounded transition-colors cursor-pointer
               ${playbackSpeed === speed
                 ? 'bg-primary text-white'
                 : 'text-text-secondary hover:bg-bg'
@@ -375,8 +414,8 @@ export function LiveTrackingPage() {
         <div className="lg:col-span-3 space-y-4">
           {/* Course Map */}
           <CourseMap
-            courseGeoJSON={courseData?.routeGeoJSON}
-            aidStations={courseData?.aidStations}
+            courseGeoJSON={undefined}
+            aidStations={courseData?.aidStations?.map(toTypesAidStation)}
             runnerPositions={mapPositions}
             selectedRunnerId={store.selectedRunnerId ?? undefined}
             onRunnerClick={handleSelectRunner}
@@ -398,8 +437,8 @@ export function LiveTrackingPage() {
           {courseData && (
             <Card padding="sm">
               <ElevationProfile
-                elevationData={courseData.elevationProfile}
-                aidStations={courseData.aidStations}
+                elevationData={toElevationPoints(courseData.elevationProfile)}
+                aidStations={courseData.aidStations.map(toTypesAidStation)}
                 runnerDistanceKm={
                   selectedRunner ? selectedRunner.distanceMi / KM_TO_MI : undefined
                 }

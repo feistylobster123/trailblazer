@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import type { ElevationPoint, AidStation } from '@/types/race.ts'
+import type { ElevationPoint, AidStation } from '@/types/race'
 
 interface ElevationProfileProps {
   elevationData: ElevationPoint[]

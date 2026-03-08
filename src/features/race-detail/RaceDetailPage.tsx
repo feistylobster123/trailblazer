@@ -146,9 +146,9 @@ function RegistrationCountdown({ closeDate }: { closeDate: string }) {
   if (isExpired) return null
 
   return (
-    <div className="flex items-center gap-3 text-sm">
+    <div className="flex flex-wrap items-center gap-2 text-sm">
       <span className="text-text-secondary">Registration closes in</span>
-      <div className="flex gap-1.5">
+      <div className="flex gap-1.5 flex-wrap">
         {days > 0 && (
           <span className="bg-primary/10 text-primary font-bold px-2 py-0.5 rounded">
             {days}d
@@ -700,7 +700,7 @@ export function RaceDetailPage() {
 
       {/* Registration CTA - sticky on mobile */}
       {status === 'registration_open' && spotsRemaining > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 bg-surface border-t border-border p-4 md:static md:border-t-0 md:p-0 md:mt-8 z-50">
+        <div className="fixed bottom-16 left-0 right-0 bg-surface border-t border-border p-4 md:static md:border-t-0 md:p-0 md:mt-8 z-40">
           <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
             <div className="hidden md:block">
               <p className="text-sm text-text-secondary">

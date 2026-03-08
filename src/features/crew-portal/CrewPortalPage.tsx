@@ -384,7 +384,7 @@ export function CrewPortalPage() {
 
   const [checklistState, setChecklistState] = useState<Record<string, boolean>>({})
 
-  const phase = racePhaseFromStatus(race?.status)
+  const phase = racePhaseFromStatus(race?.currentEdition?.status)
   const raceTotalMi = race?.distanceMi ?? 0
 
   // Merge server checklist state with local optimistic updates

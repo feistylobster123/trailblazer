@@ -1,6 +1,6 @@
 import { useRegistrationStore } from '@/stores/registration.store'
 
-export function useRegistration(raceId?: string) {
+export function useRegistration(raceId?: string, editionId = 'current') {
   const store = useRegistrationStore()
 
   return {
@@ -10,7 +10,7 @@ export function useRegistration(raceId?: string) {
     isSubmitting: store.isSubmitting,
     error: store.error,
 
-    startRegistration: () => raceId ? store.startRegistration(raceId) : Promise.resolve(),
+    startRegistration: () => raceId ? store.startRegistration(raceId, editionId) : Promise.resolve(),
     saveStep: store.saveStep,
     nextStep: store.nextStep,
     prevStep: store.prevStep,

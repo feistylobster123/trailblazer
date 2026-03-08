@@ -147,7 +147,7 @@ export function LiveStreamPage() {
         backLink={raceId ? `/races/${raceId}` : '/'}
         backLabel="Race Details"
         actions={
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             {isLive && (
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-danger animate-pulse" />
@@ -234,7 +234,7 @@ export function LiveStreamPage() {
 
         {/* Chat Panel */}
         <div className="lg:col-span-1">
-          <Card className="flex flex-col h-[600px]" padding="none">
+          <Card className="flex flex-col h-[400px] lg:h-[600px]" padding="none">
             <div className="px-4 py-3 border-b border-border flex items-center justify-between">
               <h3 className="text-sm font-semibold text-text">Race Chat</h3>
               <Badge variant="default" size="sm">{messages.length} messages</Badge>

@@ -157,7 +157,7 @@ function Navbar({ onMenuToggle, menuOpen }: { onMenuToggle: () => void; menuOpen
           onClick={onMenuToggle}
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={menuOpen}
-          className="md:hidden flex items-center justify-center w-9 h-9 rounded-md text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+          className="md:hidden flex items-center justify-center w-11 h-11 rounded-md text-white/80 hover:text-white hover:bg-white/10 transition-colors"
         >
           {menuOpen ? <IconX className="w-5 h-5" /> : <IconMenu className="w-5 h-5" />}
         </button>
@@ -175,7 +175,7 @@ function Navbar({ onMenuToggle, menuOpen }: { onMenuToggle: () => void; menuOpen
               key={link.to}
               to={link.to}
               onClick={onMenuToggle}
-              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              className={`px-3 py-3 rounded-md text-sm font-medium transition-colors ${
                 isActive(link, location.pathname)
                   ? 'bg-white/10 text-accent-light'
                   : 'text-white/80 hover:bg-white/10 hover:text-white'
@@ -226,7 +226,7 @@ function MobileNav() {
 
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-surface border-t border-border z-50">
-      <div className="flex justify-around items-center h-14">
+      <div className="flex justify-around items-center h-16">
         {tabs.map(tab => {
           const active = tab.to === '/' ? location.pathname === '/' : location.pathname.startsWith(tab.matchPrefix) && tab.matchPrefix !== '/'
           const Icon = tab.icon
@@ -234,7 +234,7 @@ function MobileNav() {
             <Link
               key={tab.to}
               to={tab.to}
-              className={`flex flex-col items-center gap-0.5 text-xs font-medium transition-colors min-w-[3.5rem] py-1 ${
+              className={`flex flex-col items-center gap-0.5 text-xs font-medium transition-colors min-w-[3.5rem] py-2 ${
                 active ? 'text-primary' : 'text-text-secondary'
               }`}
             >
@@ -338,7 +338,7 @@ export function AppShell({ children, className }: { children: ReactNode } & { cl
   return (
     <div className={className}>
       <Navbar onMenuToggle={toggleMenu} menuOpen={menuOpen} />
-      <main className="flex-1 pb-16 md:pb-0">
+      <main className="flex-1 pb-20 md:pb-0">
         {children}
       </main>
       <Footer />

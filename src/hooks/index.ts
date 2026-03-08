@@ -1,5 +1,5 @@
 export { useAuth } from './useAuth'
-export { useRace } from './useRace'
+export { useRace, useRaceList } from './useRace'
 export { useRunner } from './useRunner'
 export { useTracking } from './useTracking'
 export { useResults, useRunnerResult } from './useResults'

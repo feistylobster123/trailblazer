@@ -1,33 +1,32 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useTrackingStore } from '@/stores/tracking.store'
 
-export function useTracking(raceId?: string) {
+export function useTracking(raceId?: string, editionId = 'current') {
   const store = useTrackingStore()
+  const startedRef = useRef(false)
 
   useEffect(() => {
-    if (!raceId) return
-
-    const unsubscribe = store.subscribe(raceId)
-
-    return () => {
-      unsubscribe()
-    }
-  }, [raceId])
+    if (!raceId || startedRef.current) return
+    startedRef.current = true
+    store.startTracking(raceId, editionId)
+  }, [raceId, editionId])
 
   return {
     // State
-    trackingState: store.trackingState,
+    isPlaying: store.isPlaying,
+    playbackSpeed: store.playbackSpeed,
+    elapsedSeconds: store.elapsedSeconds,
     runnerPositions: store.runnerPositions,
+    selectedRunnerId: store.selectedRunnerId,
     recentEvents: store.recentEvents,
     isLoading: store.isLoading,
-    error: store.error,
 
     // Actions
-    startSimulation: store.startSimulation,
-    pauseSimulation: store.pauseSimulation,
-    resumeSimulation: store.resumeSimulation,
+    startTracking: store.startTracking,
+    pauseTracking: store.pauseTracking,
+    resumeTracking: store.resumeTracking,
     setPlaybackSpeed: store.setPlaybackSpeed,
     seekTo: store.seekTo,
-    getRunnerPosition: store.getRunnerPosition,
+    selectRunner: store.selectRunner,
   }
 }

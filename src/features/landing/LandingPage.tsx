@@ -366,7 +366,7 @@ export function LandingPage() {
                 <button
                   key={chip.label}
                   onClick={() => handleChipClick(chip)}
-                  className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all cursor-pointer
+                  className={`px-4 py-2.5 rounded-full text-sm font-semibold transition-all cursor-pointer
                     ${
                       activeChip === chip.label
                         ? 'bg-white text-primary shadow-md'
@@ -416,10 +416,10 @@ export function LandingPage() {
       {/* FEATURED RACES                                                    */}
       {/* ---------------------------------------------------------------- */}
       <section className="max-w-7xl mx-auto px-4 py-12 md:py-16">
-        <div className="flex items-end justify-between mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-8">
           <div>
             <h2 className="text-2xl md:text-3xl font-extrabold text-text">Featured Races</h2>
-            <p className="text-text-secondary mt-1">
+            <p className="text-text-secondary mt-1 text-sm sm:text-base">
               Hand-picked iconic ultras from around the world
             </p>
           </div>

@@ -29,7 +29,6 @@ export function useAuth() {
   return {
     // Raw store state
     user: store.user,
-    session: store.session,
     isAuthenticated: store.isAuthenticated,
     isLoading: store.isLoading,
     error: store.error,

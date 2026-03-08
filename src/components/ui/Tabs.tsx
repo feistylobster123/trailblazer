@@ -28,7 +28,7 @@ export function Tabs({ tabs, activeTab, onChange, className = '' }: TabsProps) {
 
   return (
     <div className={`border-b border-border ${className}`}>
-      <nav className="flex gap-0 overflow-x-auto scrollbar-none -mb-px">
+      <nav className="flex gap-0 overflow-x-auto -mb-px" style={{ scrollbarWidth: 'none' }}>
         {tabs.map(tab => (
           <button
             key={tab.id}

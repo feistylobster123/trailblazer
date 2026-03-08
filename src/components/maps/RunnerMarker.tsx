@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { Marker, Tooltip } from 'react-leaflet'
 import L from 'leaflet'
-import type { RunnerPosition, RunnerTrackingStatus } from '@/types/tracking.ts'
+import type { RunnerPosition, RunnerTrackingStatus } from '@/types/tracking'
 
 interface RunnerMarkerProps {
   position: RunnerPosition
@@ -12,9 +12,10 @@ interface RunnerMarkerProps {
 const DOT_SIZE = 8
 const SELECTED_DOT_SIZE = 14
 
-const STATUS_COLORS: Record<RunnerTrackingStatus, string> = {
+const STATUS_COLORS: Record<string, string> = {
   not_started: '#B2BEC3',
   on_course: '#1B4332',
+  racing: '#1B4332',
   at_aid_station: '#E76F51',
   finished: '#52B788',
   dnf: '#E63946',

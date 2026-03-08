@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { Marker, Tooltip } from 'react-leaflet'
 import L from 'leaflet'
-import type { AidStation } from '@/types/race.ts'
+import type { AidStation } from '@/types/race'
 
 interface AidStationMarkerProps {
   station: AidStation
