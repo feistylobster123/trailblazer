@@ -55,6 +55,15 @@ Updated after each wave/commit. Used for resuming after context interruptions.
 - [x] Mobile responsiveness (all pages use responsive breakpoints, bottom nav, hamburger menu)
 - [x] Build passing cleanly
 
+## Wave 8: Bug Fix Pass [COMPLETE]
+- [x] Fixed 27 bugs found via comprehensive audit
+- [x] 4 crash bugs: missing default exports (RunnerProfilePage, LoginPage, RegisterPage), broken useTracking hook
+- [x] 8 broken data bugs: useRace wrong store props, useCrew wrong service args, useRegistration missing editionId
+- [x] 5 broken UI bugs: Checkbox peer-checked, RunnerMarker status enum, type adapters for map components
+- [x] 10 minor bugs: CSS classes, barrel exports, import extensions, streaming mock status
+- [x] Mobile responsiveness: 44px touch targets, responsive playback controls, form grids, chat panel height
+- [x] Type adapter functions added for service-to-component data conversion (imperial -> metric)
+
 ## Deployment
 - GitHub Pages: https://feistylobster123.github.io/trailblazer/
 - Auto-deploys on push to main via GitHub Actions
