@@ -2,7 +2,6 @@ import { useState, useMemo } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useRace } from '@/hooks/useRace'
 import { useCountdown } from '@/hooks/useCountdown'
-import { PageHeader } from '@/components/layout/PageHeader'
 import { StatCard } from '@/components/ui/StatCard'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
@@ -147,20 +146,20 @@ function RegistrationCountdown({ closeDate }: { closeDate: string }) {
 
   return (
     <div className="flex flex-wrap items-center gap-2 text-sm">
-      <span className="text-text-secondary">Registration closes in</span>
+      <span className="text-white/70">Registration closes in</span>
       <div className="flex gap-1.5 flex-wrap">
         {days > 0 && (
-          <span className="bg-primary/10 text-primary font-bold px-2 py-0.5 rounded">
+          <span className="bg-white/20 text-white font-bold px-2 py-0.5 rounded">
             {days}d
           </span>
         )}
-        <span className="bg-primary/10 text-primary font-bold px-2 py-0.5 rounded">
+        <span className="bg-white/20 text-white font-bold px-2 py-0.5 rounded">
           {hours}h
         </span>
-        <span className="bg-primary/10 text-primary font-bold px-2 py-0.5 rounded">
+        <span className="bg-white/20 text-white font-bold px-2 py-0.5 rounded">
           {minutes}m
         </span>
-        <span className="bg-primary/10 text-primary font-bold px-2 py-0.5 rounded">
+        <span className="bg-white/20 text-white font-bold px-2 py-0.5 rounded">
           {seconds}s
         </span>
       </div>
@@ -609,39 +608,57 @@ export function RaceDetailPage() {
   const spotsRemaining = edition ? edition.maxParticipants - edition.registeredCount : 0
 
   return (
-    <div className="max-w-7xl mx-auto px-4 pb-24 md:pb-8">
-      {/* Header */}
-      <PageHeader
-        title={race.name}
-        subtitle={`${race.location}, ${race.country}`}
-        backLink="/"
-        backLabel="All Races"
-        actions={statusBadge(status)}
-        titleTransitionName="race-title"
-      />
-
-      {/* Date + Registration Countdown */}
-      <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-6 -mt-2">
-        {edition && (
-          <p className="text-sm text-text-secondary">
-            {formatDate(edition.startDate)}
+    <div className="pb-24 md:pb-8">
+      {/* Hero banner - container transform destination */}
+      <div
+        className="relative bg-gradient-to-br from-primary via-primary-light to-emerald-600 overflow-hidden"
+        style={{ viewTransitionName: 'race-hero', contain: 'layout' }}
+      >
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -top-16 -right-16 w-64 h-64 bg-white/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-accent/10 rounded-full blur-3xl" />
+        </div>
+        <div className="relative max-w-7xl mx-auto px-4 pt-6 pb-8">
+          <Link
+            to="/"
+            viewTransition
+            className="inline-flex items-center gap-1.5 text-sm text-white/70 hover:text-white transition-colors mb-4"
+          >
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M19 12H5" /><path d="M12 19l-7-7 7-7" />
+            </svg>
+            All Races
+          </Link>
+          <h1
+            className="text-3xl md:text-4xl font-extrabold text-white leading-tight tracking-tight"
+            style={{ viewTransitionName: 'race-title' }}
+          >
+            {race.name}
+          </h1>
+          <p className="text-white/80 mt-1.5 text-sm md:text-base">
+            {race.location}, {race.country}
           </p>
-        )}
-        {status === 'registration_open' && edition?.registrationCloseDate && (
-          <RegistrationCountdown closeDate={edition.registrationCloseDate} />
-        )}
+          <div className="flex flex-wrap items-center gap-3 mt-4">
+            {statusBadge(status)}
+            <Badge variant="accent">{race.distance.toUpperCase()}</Badge>
+            {edition && (
+              <span className="text-white/70 text-sm">{formatDate(edition.startDate)}</span>
+            )}
+          </div>
+          {race.tagline && (
+            <p className="text-white/70 italic text-sm mt-3 max-w-2xl">{race.tagline}</p>
+          )}
+          {status === 'registration_open' && edition?.registrationCloseDate && (
+            <div className="mt-3">
+              <RegistrationCountdown closeDate={edition.registrationCloseDate} />
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Tagline */}
-      {race.tagline && (
-        <p className="text-text-secondary italic mb-6">{race.tagline}</p>
-      )}
-
+      <div className="max-w-7xl mx-auto px-4">
       {/* Stats Bar */}
-      <div
-        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-8"
-        style={{ viewTransitionName: 'race-hero' }}
-      >
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 my-8">
         <StatCard
           label="Distance"
           value={`${race.distanceMi} mi`}
@@ -719,6 +736,7 @@ export function RaceDetailPage() {
           </div>
         </div>
       )}
+      </div>
     </div>
   )
 }
