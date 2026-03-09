@@ -147,6 +147,10 @@ body {
    Set data-nav-direction="forward|back" on <html> before navigating.
    Both old and new snapshots slide at the same rate, staying fully
    opaque so the content looks solid like a native app carousel.
+
+   Uses `animation` shorthand (not longhand) to fully reset all
+   sub-properties -- especially animation-delay which otherwise
+   leaks from the default root fade-through and causes a gap.
    ---------------------------------------------------------------- */
 
 /* Disable default crossfade isolation so old+new are both fully visible side-by-side */
@@ -154,32 +158,20 @@ html[data-nav-direction]::view-transition-image-pair(root) {
   isolation: auto;
 }
 
-/* Forward: both slide left together */
-html[data-nav-direction="forward"]::view-transition-old(root),
-html[data-nav-direction="forward"]::view-transition-new(root) {
-  animation-duration: 300ms;
-  animation-timing-function: var(--ease-standard);
-  animation-fill-mode: both;
-}
+/* Forward: both slide left together, fully opaque */
 html[data-nav-direction="forward"]::view-transition-old(root) {
-  animation-name: vt-slide-out-left;
+  animation: 300ms var(--ease-standard) both vt-slide-out-left;
 }
 html[data-nav-direction="forward"]::view-transition-new(root) {
-  animation-name: vt-slide-in-from-right;
+  animation: 300ms var(--ease-standard) both vt-slide-in-from-right;
 }
 
-/* Back: both slide right together */
-html[data-nav-direction="back"]::view-transition-old(root),
-html[data-nav-direction="back"]::view-transition-new(root) {
-  animation-duration: 300ms;
-  animation-timing-function: var(--ease-standard);
-  animation-fill-mode: both;
-}
+/* Back: both slide right together, fully opaque */
 html[data-nav-direction="back"]::view-transition-old(root) {
-  animation-name: vt-slide-out-right;
+  animation: 300ms var(--ease-standard) both vt-slide-out-right;
 }
 html[data-nav-direction="back"]::view-transition-new(root) {
-  animation-name: vt-slide-in-from-left;
+  animation: 300ms var(--ease-standard) both vt-slide-in-from-left;
 }
 
 /* Keyframes */

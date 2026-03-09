@@ -60,6 +60,11 @@ export const useRaceStore = create<RaceState>((set, get) => ({
   },
 
   fetchRace: async (raceId) => {
+    // Skip if already loaded for this race (prevents double-fetch from
+    // route loader + useEffect, which would flash isLoading: true)
+    const { selectedRace } = get()
+    if (selectedRace?.slug === raceId && !get().error) return
+
     // Keep old selectedRace visible during transition to avoid skeleton flash.
     // Only clear courseData since it's edition-specific.
     set({ isLoading: true, error: null, courseData: null })
