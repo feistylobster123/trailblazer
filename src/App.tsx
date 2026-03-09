@@ -77,14 +77,14 @@ function ViewTransitionScroll() {
 }
 
 /**
- * iOS-style slide transitions for browser back/forward.
+ * iOS-style parallax transitions for browser back/forward.
  *
  * React Router only wraps <Link viewTransition> clicks in startViewTransition,
  * NOT popstate-triggered navigations. This hook uses the Navigation API to:
  * 1. Detect traverse (back/forward) navigations
  * 2. Determine direction from history entry indices
- * 3. Wrap the navigation in document.startViewTransition so the existing
- *    lateral-slide CSS (data-nav-direction) animates the page change.
+ * 3. Wrap the navigation in document.startViewTransition so the
+ *    iOS parallax CSS (data-nav-parallax) animates the page change.
  *
  * Falls back to no animation in browsers without the Navigation API.
  */
@@ -107,9 +107,9 @@ function useBackForwardTransition() {
       const toIdx = e.destination?.index ?? 0
       const dir = toIdx < fromIdx ? 'back' : 'forward'
 
-      document.documentElement.dataset.navDirection = dir
+      document.documentElement.dataset.navParallax = dir
 
-      // Wrap navigation in a view transition so the lateral-slide CSS kicks in.
+      // Wrap navigation in a view transition so the iOS parallax CSS kicks in.
       // React Router will process the popstate independently; we just need to
       // wait for its DOM update inside the transition callback.
       const transition = document.startViewTransition(async () => {
@@ -135,9 +135,9 @@ function useBackForwardTransition() {
       })
 
       transition.finished.then(() => {
-        delete document.documentElement.dataset.navDirection
+        delete document.documentElement.dataset.navParallax
       }).catch(() => {
-        delete document.documentElement.dataset.navDirection
+        delete document.documentElement.dataset.navParallax
       })
     }
 

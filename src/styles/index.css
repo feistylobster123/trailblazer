@@ -174,7 +174,56 @@ html[data-nav-direction="back"]::view-transition-new(root) {
   animation: 300ms var(--ease-standard) both vt-slide-in-from-left;
 }
 
+/* ----------------------------------------------------------------
+   iOS-style parallax card slide
+   Full-page transitions without custom animations (e.g. back/forward).
+   Set data-nav-parallax="forward|back" on <html>.
+
+   Forward: new page slides in from right covering old page.
+   Old page recedes left (30%) and dims -- parallax depth effect.
+   Back: reverse -- old slides off right, new rises from behind-left.
+   ---------------------------------------------------------------- */
+
+html[data-nav-parallax]::view-transition-image-pair(root) {
+  isolation: auto;
+}
+
+/* Forward push */
+html[data-nav-parallax="forward"]::view-transition-old(root) {
+  animation: 350ms var(--ease-emphasized-decel) both ios-parallax-recede;
+  z-index: 1;
+}
+html[data-nav-parallax="forward"]::view-transition-new(root) {
+  animation: 350ms var(--ease-emphasized-decel) both ios-slide-from-right;
+  z-index: 2;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.12);
+}
+
+/* Back pop */
+html[data-nav-parallax="back"]::view-transition-old(root) {
+  animation: 350ms var(--ease-emphasized-decel) both ios-slide-to-right;
+  z-index: 2;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.12);
+}
+html[data-nav-parallax="back"]::view-transition-new(root) {
+  animation: 350ms var(--ease-emphasized-decel) both ios-parallax-emerge;
+  z-index: 1;
+}
+
 /* Keyframes */
+@keyframes ios-parallax-recede {
+  to { transform: translateX(-30%); filter: brightness(0.8); }
+}
+@keyframes ios-slide-from-right {
+  from { transform: translateX(100%); }
+}
+@keyframes ios-slide-to-right {
+  to { transform: translateX(100%); }
+}
+@keyframes ios-parallax-emerge {
+  from { transform: translateX(-30%); filter: brightness(0.8); }
+}
+
 @keyframes vt-fade-out {
   to { opacity: 0; }
 }

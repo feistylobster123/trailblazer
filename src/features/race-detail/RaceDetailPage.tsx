@@ -639,8 +639,8 @@ export function RaceDetailPage() {
             to="/"
             viewTransition
             onClick={() => {
-              document.documentElement.dataset.navDirection = 'back'
-              setTimeout(() => { delete document.documentElement.dataset.navDirection }, 500)
+              document.documentElement.dataset.navParallax = 'back'
+              setTimeout(() => { delete document.documentElement.dataset.navParallax }, 500)
             }}
             className="inline-flex items-center gap-1.5 text-sm text-white/70 hover:text-white transition-colors mb-4"
           >

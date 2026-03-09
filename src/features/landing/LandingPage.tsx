@@ -89,9 +89,7 @@ function FeaturedRaceCard({ race, index }: { race: RaceSummary; index: number })
     if (titleRef.current) {
       titleRef.current.style.viewTransitionName = 'race-title'
     }
-    // iOS-style forward slide for the rest of the page
-    document.documentElement.dataset.navDirection = 'forward'
-    setTimeout(() => { delete document.documentElement.dataset.navDirection }, 500)
+    // Container transform handles this transition -- no parallax slide needed
   }
 
   return (
@@ -177,8 +175,6 @@ function RaceRow({ race, index }: { race: RaceSummary; index: number }) {
     if (titleRef.current) {
       titleRef.current.style.viewTransitionName = 'race-title'
     }
-    document.documentElement.dataset.navDirection = 'forward'
-    setTimeout(() => { delete document.documentElement.dataset.navDirection }, 500)
   }
 
   return (
