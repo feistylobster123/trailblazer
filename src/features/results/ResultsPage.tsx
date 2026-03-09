@@ -129,7 +129,7 @@ function ResultCard({
   onToggle: () => void
 }) {
   return (
-    <div className="bg-surface border border-border rounded-xl overflow-hidden">
+    <div className="bg-surface border border-border rounded-xl overflow-hidden transition-transform duration-150 active:scale-[0.98]">
       <button
         onClick={onToggle}
         className="w-full text-left p-4 cursor-pointer"

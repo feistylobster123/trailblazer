@@ -13,7 +13,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
 
     return (
       <div className={`flex flex-col gap-1 ${className}`}>
-        <label htmlFor={checkboxId} className="flex items-start gap-3 cursor-pointer group">
+        <label htmlFor={checkboxId} className="flex items-start gap-3 cursor-pointer group transition-transform duration-150 active:scale-[0.98]">
           <div className="relative flex items-center justify-center mt-0.5">
             <input
               ref={ref}

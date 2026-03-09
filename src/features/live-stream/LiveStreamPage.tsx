@@ -219,7 +219,7 @@ export function LiveStreamPage() {
                 {streamInfo.highlightTimestamps.map((hl, i) => (
                   <button
                     key={i}
-                    className="flex items-center gap-3 w-full text-left p-2 rounded-lg hover:bg-bg transition-colors cursor-pointer"
+                    className="flex items-center gap-3 w-full text-left p-2 rounded-lg hover:bg-bg transition-all duration-150 active:scale-[0.98] cursor-pointer"
                   >
                     <span className="text-xs font-mono text-text-secondary bg-border/30 px-2 py-1 rounded">
                       {Math.floor(hl.timeSeconds / 3600)}:{String(Math.floor((hl.timeSeconds % 3600) / 60)).padStart(2, '0')}:{String(hl.timeSeconds % 60).padStart(2, '0')}

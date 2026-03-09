@@ -47,7 +47,7 @@ export function Tabs({ tabs, activeTab, onChange, className = '' }: TabsProps) {
             key={tab.id}
             ref={(el) => { if (el) tabRefs.current.set(tab.id, el) }}
             onClick={() => handleChange(tab.id)}
-            className={`flex items-center gap-2 px-4 py-3 text-sm font-medium whitespace-nowrap border-b-2 border-transparent transition-colors cursor-pointer
+            className={`flex items-center gap-2 px-4 py-3 text-sm font-medium whitespace-nowrap border-b-2 border-transparent transition-all duration-150 cursor-pointer active:scale-[0.95]
               ${active === tab.id
                 ? 'text-primary'
                 : 'text-text-secondary hover:text-text'

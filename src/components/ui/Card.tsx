@@ -11,7 +11,7 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
 const variantStyles: Record<CardVariant, string> = {
   default: 'bg-surface border border-border',
   elevated: 'bg-surface shadow-md border border-border/50',
-  interactive: 'bg-surface border border-border hover:shadow-md hover:border-border/80 transition-all duration-200 cursor-pointer',
+  interactive: 'bg-surface border border-border hover:shadow-md hover:border-border/80 active:scale-[0.98] transition-all duration-200 cursor-pointer',
 }
 
 const paddingStyles: Record<string, string> = {

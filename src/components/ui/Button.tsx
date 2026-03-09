@@ -39,7 +39,7 @@ export function Button({
     <button
       className={`inline-flex items-center justify-center font-semibold rounded-lg transition-all duration-150 cursor-pointer
         ${variantStyles[variant]} ${sizeStyles[size]}
-        ${disabled || loading ? 'opacity-50 cursor-not-allowed' : ''}
+        ${disabled || loading ? 'opacity-50 cursor-not-allowed' : 'active:scale-[0.97]'}
         ${className}`}
       disabled={disabled || loading}
       {...props}

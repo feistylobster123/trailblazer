@@ -233,7 +233,7 @@ function LiveBanner({ race }: { race: RaceSummary }) {
   return (
     <section className="max-w-7xl mx-auto px-4 mb-8">
       <Link to={`/races/${race.slug}/live`} viewTransition>
-        <div className="rounded-xl bg-gradient-to-r from-danger/10 to-accent/10 border border-danger/30 p-4 md:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+        <div className="rounded-xl bg-gradient-to-r from-danger/10 to-accent/10 border border-danger/30 p-4 md:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 transition-transform duration-150 active:scale-[0.99]">
           <div className="flex items-center gap-3">
             <span className="relative flex h-3 w-3">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-danger opacity-75" />
@@ -408,7 +408,7 @@ export function LandingPage() {
                 <button
                   key={chip.label}
                   onClick={() => handleChipClick(chip)}
-                  className={`px-4 py-2.5 rounded-full text-sm font-semibold transition-all cursor-pointer
+                  className={`px-4 py-2.5 rounded-full text-sm font-semibold transition-all duration-150 cursor-pointer active:scale-[0.93]
                     ${
                       activeChip === chip.label
                         ? 'bg-white text-primary shadow-md'
@@ -514,7 +514,7 @@ export function LandingPage() {
             {/* Mobile: filter button */}
             <button
               onClick={() => setFiltersOpen(true)}
-              className="sm:hidden flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-border bg-surface text-sm font-medium text-text hover:bg-surface-raised transition-colors cursor-pointer"
+              className="sm:hidden flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-border bg-surface text-sm font-medium text-text hover:bg-surface-raised transition-all duration-150 active:scale-[0.97] cursor-pointer"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="4" y1="6" x2="20" y2="6" />

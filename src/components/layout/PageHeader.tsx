@@ -36,7 +36,7 @@ export function PageHeader({ title, subtitle, backLink, backLabel = 'Back', acti
         <Link
           to={backLink}
           viewTransition
-          className="inline-flex items-center gap-1 text-sm text-text-secondary hover:text-text transition-colors mb-3 group py-2"
+          className="inline-flex items-center gap-1 text-sm text-text-secondary hover:text-text transition-all duration-150 active:opacity-70 mb-3 group py-2"
         >
           <IconChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
           <span>{backLabel}</span>

@@ -54,7 +54,7 @@ export function Modal({ isOpen, onClose, title, children, size = 'md', className
             <h2 className="text-lg font-bold text-text">{title}</h2>
             <button
               onClick={onClose}
-              className="text-text-muted hover:text-text transition-colors p-1 cursor-pointer"
+              className="text-text-muted hover:text-text transition-all duration-150 p-1 cursor-pointer active:scale-[0.85]"
             >
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M5 5l10 10M15 5L5 15" />
