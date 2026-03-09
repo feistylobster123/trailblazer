@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react'
-import { useParams, Link, useNavigate } from 'react-router-dom'
+import { useState, useMemo, useEffect, useRef } from 'react'
+import { useParams, Link, useNavigate, useLocation } from 'react-router-dom'
 import { useRace } from '@/hooks/useRace'
 import { useCountdown } from '@/hooks/useCountdown'
 import { StatCard } from '@/components/ui/StatCard'
@@ -113,20 +113,20 @@ function SkeletonBlock({ className = '' }: { className?: string }) {
   return <div className={`bg-border/40 rounded-lg animate-pulse ${className}`} />
 }
 
-function RaceDetailSkeleton() {
+function RaceDetailSkeleton({ enableHeroTransition }: { enableHeroTransition?: boolean }) {
   return (
     <div className="pb-24 md:pb-8">
       {/* Hero skeleton - matches hero banner structure so container transforms work during loading */}
       <div
         className="relative bg-gradient-to-br from-primary via-primary-light to-emerald-600 overflow-hidden"
-        style={{ viewTransitionName: 'race-hero', contain: 'layout' }}
+        style={enableHeroTransition ? { viewTransitionName: 'race-hero', contain: 'layout' } : undefined}
       >
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute -top-16 -right-16 w-64 h-64 bg-white/5 rounded-full blur-3xl" />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 pt-6 pb-8">
           <SkeletonBlock className="h-4 w-20 mb-4 !bg-white/20" />
-          <div style={{ viewTransitionName: 'race-title' }}>
+          <div style={enableHeroTransition ? { viewTransitionName: 'race-title' } : undefined}>
             <SkeletonBlock className="h-9 w-2/3 mb-2 !bg-white/20" />
           </div>
           <SkeletonBlock className="h-4 w-1/3 !bg-white/20" />
@@ -459,7 +459,7 @@ function InfoTab({ race }: { race: Race }) {
 // Tab: Results
 // ---------------------------------------------------------------------------
 
-function ResultsTab({ race }: { race: Race }) {
+function ResultsTab({ race, onNavigateAway }: { race: Race; onNavigateAway?: () => void }) {
   const completedEditions = race.editions
     .filter((e) => e.status === 'completed')
     .sort((a, b) => b.year - a.year)
@@ -485,7 +485,7 @@ function ResultsTab({ race }: { race: Race }) {
               {latestEdition.registeredCount} participants
             </p>
           </div>
-          <Link to={`/races/${race.id}/results/${latestEdition.year}`} viewTransition>
+          <Link to={`/races/${race.id}/results/${latestEdition.year}`} viewTransition onClick={onNavigateAway}>
             <Button variant="primary" size="md">
               View Full Results
             </Button>
@@ -521,7 +521,7 @@ function ResultsTab({ race }: { race: Race }) {
           <h3 className="text-lg font-bold text-text mb-3">Previous Years</h3>
           <div className="flex flex-wrap gap-2">
             {completedEditions.slice(1).map((ed) => (
-              <Link key={ed.id} to={`/races/${race.id}/results/${ed.year}`} viewTransition>
+              <Link key={ed.id} to={`/races/${race.id}/results/${ed.year}`} viewTransition onClick={onNavigateAway}>
                 <Button variant="secondary" size="sm">{ed.year}</Button>
               </Link>
             ))}
@@ -536,7 +536,7 @@ function ResultsTab({ race }: { race: Race }) {
 // Tab: Live
 // ---------------------------------------------------------------------------
 
-function LiveTab({ race }: { race: Race }) {
+function LiveTab({ race, onNavigateAway }: { race: Race; onNavigateAway?: () => void }) {
   return (
     <div className="space-y-6 py-6">
       <Card variant="elevated" padding="lg">
@@ -551,7 +551,7 @@ function LiveTab({ race }: { race: Race }) {
           <p className="text-text-secondary">
             Follow runners in real-time with GPS tracking, live splits, and interactive course map.
           </p>
-          <Link to={`/races/${race.id}/live`} viewTransition>
+          <Link to={`/races/${race.id}/live`} viewTransition onClick={onNavigateAway}>
             <Button variant="accent" size="lg">
               Open Live Tracking
             </Button>
@@ -568,8 +568,28 @@ function LiveTab({ race }: { race: Race }) {
 
 export function RaceDetailPage() {
   const { raceId } = useParams<{ raceId: string }>()
+  const location = useLocation()
   const { race, courseData, isLoading, error } = useRace(raceId)
   const [activeTab, setActiveTab] = useState('course')
+
+  // View transition: only enable hero container transform for landing ↔ detail
+  const heroRef = useRef<HTMLDivElement>(null)
+  const titleRef = useRef<HTMLHeadingElement>(null)
+  const fromLanding = !!(location.state as { fromLanding?: boolean } | null)?.fromLanding
+  const [heroTransitionActive, setHeroTransitionActive] = useState(fromLanding)
+
+  useEffect(() => {
+    if (!heroTransitionActive) {
+      const t = setTimeout(() => setHeroTransitionActive(true), 500)
+      return () => clearTimeout(t)
+    }
+  }, [heroTransitionActive])
+
+  /** Clear hero viewTransitionNames before non-container-transform navigations */
+  const clearHeroNames = () => {
+    if (heroRef.current) heroRef.current.style.viewTransitionName = ''
+    if (titleRef.current) titleRef.current.style.viewTransitionName = ''
+  }
 
   const edition: RaceEdition | undefined = race?.currentEdition ?? race?.editions[0]
   const status = edition?.status
@@ -588,7 +608,7 @@ export function RaceDetailPage() {
 
   // Loading state: show skeleton when we have no data yet (first mount or fetch in progress)
   if (!race && !error) {
-    return <RaceDetailSkeleton />
+    return <RaceDetailSkeleton enableHeroTransition={heroTransitionActive} />
   }
 
   // Error state
@@ -627,8 +647,9 @@ export function RaceDetailPage() {
     <div className="pb-24 md:pb-8">
       {/* Hero banner - container transform destination */}
       <div
+        ref={heroRef}
         className="relative bg-gradient-to-br from-primary via-primary-light to-emerald-600 overflow-hidden"
-        style={{ viewTransitionName: 'race-hero', contain: 'layout' }}
+        style={heroTransitionActive ? { viewTransitionName: 'race-hero', contain: 'layout' } : undefined}
       >
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute -top-16 -right-16 w-64 h-64 bg-white/5 rounded-full blur-3xl" />
@@ -639,6 +660,7 @@ export function RaceDetailPage() {
             to="/"
             viewTransition
             onClick={() => {
+              clearHeroNames()
               document.documentElement.dataset.navParallax = 'back'
               setTimeout(() => { delete document.documentElement.dataset.navParallax }, 500)
             }}
@@ -650,8 +672,9 @@ export function RaceDetailPage() {
             All Races
           </Link>
           <h1
+            ref={titleRef}
             className="text-3xl md:text-4xl font-extrabold text-white leading-tight tracking-tight"
-            style={{ viewTransitionName: 'race-title' }}
+            style={heroTransitionActive ? { viewTransitionName: 'race-title' } : undefined}
           >
             {race.name}
           </h1>
@@ -732,11 +755,11 @@ export function RaceDetailPage() {
       </TabPanel>
 
       <TabPanel tabId="results" activeTab={activeTab}>
-        <ResultsTab race={race} />
+        <ResultsTab race={race} onNavigateAway={clearHeroNames} />
       </TabPanel>
 
       <TabPanel tabId="live" activeTab={activeTab}>
-        <LiveTab race={race} />
+        <LiveTab race={race} onNavigateAway={clearHeroNames} />
       </TabPanel>
 
       {/* Registration CTA - sticky on mobile */}
@@ -748,7 +771,7 @@ export function RaceDetailPage() {
                 {spotsRemaining} spot{spotsRemaining !== 1 ? 's' : ''} remaining
               </p>
             </div>
-            <Link to={`/races/${raceId}/register`} viewTransition className="w-full md:w-auto">
+            <Link to={`/races/${raceId}/register`} viewTransition onClick={clearHeroNames} className="w-full md:w-auto">
               <Button variant="accent" size="lg" className="w-full md:w-auto">
                 Register Now
               </Button>

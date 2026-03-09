@@ -93,7 +93,7 @@ function FeaturedRaceCard({ race, index }: { race: RaceSummary; index: number })
   }
 
   return (
-    <Link to={href} viewTransition onClick={handleClick} className="block group">
+    <Link to={href} viewTransition onClick={handleClick} state={{ fromLanding: true }} className="block group">
       <Card variant="interactive" padding="none" className="overflow-hidden h-full flex flex-col">
         {/* Image / gradient header */}
         <div
@@ -178,7 +178,7 @@ function RaceRow({ race, index }: { race: RaceSummary; index: number }) {
   }
 
   return (
-    <Link to={href} viewTransition onClick={handleClick} className="block group">
+    <Link to={href} viewTransition onClick={handleClick} state={{ fromLanding: true }} className="block group">
       <Card variant="interactive" padding="none" className="overflow-hidden flex flex-col sm:flex-row">
         {/* Thumbnail */}
         <div
