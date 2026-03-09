@@ -10,6 +10,7 @@ interface RaceState {
   courseData: CourseData | null
   filters: RaceListFilter
   isLoading: boolean
+  isDetailLoading: boolean
   error: string | null
   fetchRaces: () => Promise<void>
   fetchFeaturedRaces: () => Promise<void>
@@ -28,6 +29,7 @@ export const useRaceStore = create<RaceState>((set, get) => ({
   courseData: null,
   filters: DEFAULT_FILTERS,
   isLoading: false,
+  isDetailLoading: false,
   error: null,
 
   fetchRaces: async () => {
@@ -61,34 +63,36 @@ export const useRaceStore = create<RaceState>((set, get) => ({
 
   fetchRace: async (raceId) => {
     // Skip if already loaded for this race (prevents double-fetch from
-    // route loader + useEffect, which would flash isLoading: true)
+    // route loader + useEffect, which would flash isDetailLoading: true)
     const { selectedRace } = get()
     if (selectedRace?.slug === raceId && !get().error) return
 
-    // Keep old selectedRace visible during transition to avoid skeleton flash.
-    // Only clear courseData since it's edition-specific.
-    set({ isLoading: true, error: null, courseData: null })
+    // Use isDetailLoading (not isLoading) so the landing page's race list
+    // doesn't flip to skeletons during navigation -- that would remove the
+    // card hero from the DOM before startViewTransition captures the old
+    // snapshot, breaking the container transform animation.
+    set({ isDetailLoading: true, error: null, courseData: null })
     try {
       const race = getService('race')
       const result = await race.getRace(raceId)
-      set({ selectedRace: result, isLoading: false })
+      set({ selectedRace: result, isDetailLoading: false })
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to fetch race'
-      set({ error: message, isLoading: false, selectedRace: null })
+      set({ error: message, isDetailLoading: false, selectedRace: null })
     }
   },
 
   fetchCourseData: async (raceId) => {
-    set({ isLoading: true, error: null })
+    set({ isDetailLoading: true, error: null })
     try {
       const race = getService('race')
       const { selectedRace } = get()
       const editionId = selectedRace?.currentEdition?.id ?? selectedRace?.editions?.[0]?.id ?? ''
       const course = await race.getCourseData(raceId, editionId)
-      set({ courseData: course, isLoading: false })
+      set({ courseData: course, isDetailLoading: false })
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to fetch course data'
-      set({ error: message, isLoading: false })
+      set({ error: message, isDetailLoading: false })
     }
   },
 
