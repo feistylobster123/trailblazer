@@ -76,8 +76,80 @@ function ViewTransitionScroll() {
   return null
 }
 
+/**
+ * iOS-style slide transitions for browser back/forward.
+ *
+ * React Router only wraps <Link viewTransition> clicks in startViewTransition,
+ * NOT popstate-triggered navigations. This hook uses the Navigation API to:
+ * 1. Detect traverse (back/forward) navigations
+ * 2. Determine direction from history entry indices
+ * 3. Wrap the navigation in document.startViewTransition so the existing
+ *    lateral-slide CSS (data-nav-direction) animates the page change.
+ *
+ * Falls back to no animation in browsers without the Navigation API.
+ */
+function useBackForwardTransition() {
+  useEffect(() => {
+    const nav = (window as unknown as { navigation?: { currentEntry?: { index: number }; addEventListener: (type: string, handler: (e: NavigateEvent) => void) => void; removeEventListener: (type: string, handler: (e: NavigateEvent) => void) => void } }).navigation
+    if (!nav || typeof document.startViewTransition !== 'function') return
+
+    type NavigateEvent = {
+      navigationType: string
+      canIntercept: boolean
+      destination: { index: number }
+    }
+
+    const handleNavigate = (e: NavigateEvent) => {
+      if (e.navigationType !== 'traverse') return
+      if (!e.canIntercept) return
+
+      const fromIdx = nav.currentEntry?.index ?? 0
+      const toIdx = e.destination?.index ?? 0
+      const dir = toIdx < fromIdx ? 'back' : 'forward'
+
+      document.documentElement.dataset.navDirection = dir
+
+      // Wrap navigation in a view transition so the lateral-slide CSS kicks in.
+      // React Router will process the popstate independently; we just need to
+      // wait for its DOM update inside the transition callback.
+      const transition = document.startViewTransition(async () => {
+        await new Promise<void>((resolve) => {
+          let settled = false
+          const finish = () => {
+            if (settled) return
+            settled = true
+            // One extra frame so React's commit is fully painted
+            requestAnimationFrame(() => requestAnimationFrame(resolve))
+          }
+
+          const root = document.querySelector('main') ?? document.getElementById('root')!
+          const observer = new MutationObserver(() => {
+            observer.disconnect()
+            finish()
+          })
+          observer.observe(root, { childList: true, subtree: true })
+
+          // Fallback: if the route doesn't change the DOM (same page), proceed
+          setTimeout(() => { observer.disconnect(); finish() }, 500)
+        })
+      })
+
+      transition.finished.then(() => {
+        delete document.documentElement.dataset.navDirection
+      }).catch(() => {
+        delete document.documentElement.dataset.navDirection
+      })
+    }
+
+    nav.addEventListener('navigate', handleNavigate as (e: NavigateEvent) => void)
+    return () => nav.removeEventListener('navigate', handleNavigate as (e: NavigateEvent) => void)
+  }, [])
+}
+
 /** Layout route: AppShell wraps all pages, Outlet renders the matched child */
 function Layout() {
+  useBackForwardTransition()
+
   return (
     <AppShell>
       <ViewTransitionScroll />

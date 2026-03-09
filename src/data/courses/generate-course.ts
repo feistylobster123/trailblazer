@@ -219,7 +219,7 @@ function generateAidStations(
       elevM = p0.elevationM + (p1.elevationM - p0.elevationM) * t
     }
     elevM = Math.round(elevM)
-    const elevFt = Math.round(elevM / FT_TO_M)
+    const elevationFt = Math.round(elevM / FT_TO_M)
 
     // Generate slightly offset coordinates from the race start
     const bearing = progress * Math.PI * 2 * 0.4 + rng() * 0.5

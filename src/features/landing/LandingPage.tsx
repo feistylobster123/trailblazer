@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react'
-import { Link, useViewTransitionState } from 'react-router-dom'
+import { useState, useMemo, useRef } from 'react'
+import { Link } from 'react-router-dom'
 import { useRaceList } from '@/hooks/useRace'
 import { useCountdown } from '@/hooks/useCountdown'
 import {
@@ -75,20 +75,38 @@ function RaceCountdown({ date }: { date: string }) {
 function FeaturedRaceCard({ race, index }: { race: RaceSummary; index: number }) {
   const cfg = statusConfig[race.status] ?? statusConfig.upcoming
   const href = `/races/${race.slug}`
-  const isTransitioning = useViewTransitionState(href)
+  const heroRef = useRef<HTMLDivElement>(null)
+  const titleRef = useRef<HTMLHeadingElement>(null)
+
+  const handleClick = () => {
+    // Set viewTransitionName directly on DOM before React Router captures old snapshot.
+    // useViewTransitionState doesn't work because the old snapshot is taken before
+    // React re-renders, so the conditional name is never set in time.
+    if (heroRef.current) {
+      heroRef.current.style.viewTransitionName = 'race-hero'
+      heroRef.current.style.contain = 'layout'
+    }
+    if (titleRef.current) {
+      titleRef.current.style.viewTransitionName = 'race-title'
+    }
+    // iOS-style forward slide for the rest of the page
+    document.documentElement.dataset.navDirection = 'forward'
+    setTimeout(() => { delete document.documentElement.dataset.navDirection }, 500)
+  }
+
   return (
-    <Link to={href} viewTransition className="block group">
+    <Link to={href} viewTransition onClick={handleClick} className="block group">
       <Card variant="interactive" padding="none" className="overflow-hidden h-full flex flex-col">
         {/* Image / gradient header */}
         <div
+          ref={heroRef}
           className={`relative h-44 bg-gradient-to-br ${gradientForIndex(index)} flex items-end`}
-          style={{ viewTransitionName: isTransitioning ? 'race-hero' : undefined, contain: isTransitioning ? 'layout' : undefined }}
         >
           <div className="absolute inset-0 bg-black/20" />
           <div className="relative z-10 px-5 pb-4 w-full">
             <h3
+              ref={titleRef}
               className="text-white text-lg font-bold leading-snug drop-shadow-sm"
-              style={{ viewTransitionName: isTransitioning ? 'race-title' : undefined }}
             >
               {race.name}
             </h3>
@@ -148,14 +166,28 @@ function FeaturedRaceCard({ race, index }: { race: RaceSummary; index: number })
 function RaceRow({ race, index }: { race: RaceSummary; index: number }) {
   const cfg = statusConfig[race.status] ?? statusConfig.upcoming
   const href = `/races/${race.slug}`
-  const isTransitioning = useViewTransitionState(href)
+  const heroRef = useRef<HTMLDivElement>(null)
+  const titleRef = useRef<HTMLHeadingElement>(null)
+
+  const handleClick = () => {
+    if (heroRef.current) {
+      heroRef.current.style.viewTransitionName = 'race-hero'
+      heroRef.current.style.contain = 'layout'
+    }
+    if (titleRef.current) {
+      titleRef.current.style.viewTransitionName = 'race-title'
+    }
+    document.documentElement.dataset.navDirection = 'forward'
+    setTimeout(() => { delete document.documentElement.dataset.navDirection }, 500)
+  }
+
   return (
-    <Link to={href} viewTransition className="block group">
+    <Link to={href} viewTransition onClick={handleClick} className="block group">
       <Card variant="interactive" padding="none" className="overflow-hidden flex flex-col sm:flex-row">
         {/* Thumbnail */}
         <div
+          ref={heroRef}
           className={`sm:w-40 h-28 sm:h-auto shrink-0 bg-gradient-to-br ${gradientForIndex(index)} flex items-center justify-center`}
-          style={{ viewTransitionName: isTransitioning ? 'race-hero' : undefined, contain: isTransitioning ? 'layout' : undefined }}
         >
           <span className="text-white/70 text-xs font-bold uppercase tracking-wider">
             {distanceLabel[race.distance] ?? race.distance}
@@ -165,8 +197,8 @@ function RaceRow({ race, index }: { race: RaceSummary; index: number }) {
         <div className="p-4 flex-1 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
           <div className="flex-1 min-w-0">
             <h4
+              ref={titleRef}
               className="font-bold text-text truncate group-hover:text-primary transition-colors"
-              style={{ viewTransitionName: isTransitioning ? 'race-title' : undefined }}
             >
               {race.name}
             </h4>
