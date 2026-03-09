@@ -109,6 +109,20 @@ function useBackForwardTransition() {
 
       document.documentElement.dataset.navParallax = dir
 
+      // Clear hero/title viewTransitionNames before old-state capture.
+      // During parallax, the whole page slides as one unit -- named elements
+      // would get extracted as separate layers, causing one-frame flashes
+      // when the other page has no matching element.
+      const clearHeroNames = () => {
+        document.querySelectorAll('[style]').forEach(el => {
+          const s = (el as HTMLElement).style
+          if (s.viewTransitionName === 'race-hero' || s.viewTransitionName === 'race-title') {
+            s.viewTransitionName = ''
+          }
+        })
+      }
+      clearHeroNames()
+
       // Wrap navigation in a view transition so the iOS parallax CSS kicks in.
       // React Router will process the popstate independently; we just need to
       // wait for its DOM update inside the transition callback.
@@ -118,6 +132,8 @@ function useBackForwardTransition() {
           const finish = () => {
             if (settled) return
             settled = true
+            // Clear hero names on the new DOM too (React may re-apply them)
+            clearHeroNames()
             // One extra frame so React's commit is fully painted
             requestAnimationFrame(() => requestAnimationFrame(resolve))
           }
